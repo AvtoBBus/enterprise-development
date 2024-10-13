@@ -1,4 +1,5 @@
 using AdmissionCommittee.Tests.Fixtures;
+using System.Xml.Schema;
 
 namespace AdmissionCommittee.Tests.Tests;
 
@@ -53,27 +54,23 @@ public class TestRequests(AdmissionComitteeFixture fixture) : IClassFixture<Admi
         var testSpecialitieName = "Philosophy";
 
 
-        var specialitiesApllicationApplicants = from specialities in _fixture.Specialities
+        var query = (from specialities in _fixture.Specialities
+                                                where specialities.Name == testSpecialitieName
                                                 join applicantion in _fixture.Applications on specialities.Id equals applicantion.SpecialityId
                                                 join applicants in _fixture.Applicants on applicantion.ApplicantId equals applicants.Id
-                                                select applicants;
+                                                select new
+                                                {
+                                                    Applicant = applicants,
+                                                    TotalScore = _fixture.ExamResults
+                                                            .Where(examResult => examResult.ApplicantId == applicants.Id)
+                                                            .Sum(examResult => examResult.Result)
+                                                })
+                                                .OrderByDescending(x => x.TotalScore)
+                                                .Select(x => x.Applicant.FullName)
+                                                .Distinct()
+                                                .ToList();
 
-
-
-        var query = specialitiesApllicationApplicants.Select(
-                 applicant => new
-                 {
-                     applicant,
-                     TotalScore = _fixture.ExamResults
-                        .Where(examResult => examResult.ApplicantId == applicant.Id)
-                        .Sum(examResult => examResult.Result)
-                 }
-             ).OrderByDescending(x => x.TotalScore)
-             .Select(x => x.applicant.FullName)
-             .Distinct()
-             .ToList();
-
-        Assert.Equal(["Michail Michailovich", "Andrew Viktorovich", "Vladimir Vladimirovich", "Veronika Igorevna", "Vitaliy Vitalivich"], query);
+        Assert.Equal(["Veronika Igorevna"], query);
     }
 
     /// <summary>
@@ -87,10 +84,10 @@ public class TestRequests(AdmissionComitteeFixture fixture) : IClassFixture<Admi
         var query = _fixture.Applications
             .Where(application => application.Priority == testPriorityValue)
             .GroupBy(application => application.SpecialityId)
-            .Select(Group => new
+            .Select(group => new
             {
-                Group.Key,
-                Count = Group.Count()
+                group.Key,
+                Count = group.Count()
             })
             .Select(result => result.Count)
             .ToList();
@@ -105,17 +102,15 @@ public class TestRequests(AdmissionComitteeFixture fixture) : IClassFixture<Admi
     public void TestTopRatedApplicants()
     {
         var query = _fixture.Applicants
-            .Select
-            (applicant => new
+            .Select(applicant => new
             {
-                applicant,
-                score = _fixture.ExamResults
+                Applicant = applicant,
+                Score = _fixture.ExamResults
                 .Where(examRes => examRes.ApplicantId == applicant.Id)
                 .Sum(examRes => examRes.Result)
-            }
-            ).OrderByDescending(a => a.score)
+            }).OrderByDescending(a => a.Score)
             .Take(5)
-            .Select(a => a.applicant.Id)
+            .Select(a => a.Applicant.Id)
             .ToList();
 
         Assert.Equal(5, query.Count);
@@ -132,43 +127,42 @@ public class TestRequests(AdmissionComitteeFixture fixture) : IClassFixture<Admi
             .GroupBy(examRes => examRes.ExamName)
             .Select(Group => new
             {
-                examName = Group.Key,
-                maxScore = Group.Max(examRes => examRes.Result)
-            }
-            );
+                ExamName = Group.Key,
+                MaxScore = Group.Max(examRes => examRes.Result)
+            });
 
         var query = maxScoreByExam
             .Join(
                 _fixture.ExamResults,
-                maxScore => maxScore.maxScore,
+                maxScore => maxScore.MaxScore,
                 examRes => examRes.Result,
                 (maxScore, examRes) => new
                 {
-                    maxScore,
-                    examRes
+                    MaxScore = maxScore,
+                    ExamRes = examRes
                 }
             )
-            .Where(joined => joined.maxScore.examName == joined.examRes.ExamName)
+            .Where(joined => joined.MaxScore.ExamName == joined.ExamRes.ExamName)
             .Join(
                 _fixture.Applicants,
-                maxScore => maxScore.examRes.ApplicantId,
+                maxScore => maxScore.ExamRes.ApplicantId,
                 applicant => applicant.Id,
                 (maxScore, applicant) => new
                 {
-                    maxScore = maxScore,
-                    applicant = applicant
+                    MaxScore = maxScore,
+                    Applicant = applicant
                 }
             )
             .Join(
                 _fixture.Applications,
-                maxScore => maxScore.applicant.Id,
+                maxScore => maxScore.Applicant.Id,
                 application => application.ApplicantId,
                 (maxScore, application) => new
                 {
-                    Applicant = maxScore.applicant,
+                    maxScore.Applicant,
                     application.SpecialityId,
-                    maxScore.maxScore.examRes.ExamName,
-                    maxScore = maxScore.maxScore.examRes.Result,
+                    maxScore.MaxScore.ExamRes.ExamName,
+                    MaxScore = maxScore.MaxScore.ExamRes.Result,
                     application.Priority
                 }
             )
