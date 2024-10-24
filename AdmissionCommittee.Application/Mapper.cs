@@ -8,6 +8,18 @@ namespace AdmissionCommittee.Application;
 public class Mapper(IMapper mapper)
 {
     /// <summary>
+    /// Convert <see cref="ApplicantDto"/> object into <see cref="Applicant"/>
+    /// </summary>
+    /// <param name="item">Item for convert</param>
+    /// <returns><see cref="Applicant"/> object</returns>
+    public Applicant GetApplicant(ApplicantDto item)
+    {
+        var applicant = mapper.Map<Applicant>(item);
+
+        return applicant;
+    }
+
+    /// <summary>
     /// Convert <see cref="DirectionDto"/> object into <see cref="Direction"/>
     /// </summary>
     /// <param name="item">Item for convert</param>
@@ -34,15 +46,22 @@ public class Mapper(IMapper mapper)
     /// </summary>
     /// <param name="item">Item for convert</param>
     /// <returns><see cref="ExamResult"/> object</returns>
-    public ExamResult GetDirection(ExamResultDto item)
+    public ExamResult GetExamResult(ExamResultDto item)
     {
         var examResult = mapper.Map<ExamResult>(item);
 
-        ApplicantRepository applicantRepository = new();
-        var applicant = applicantRepository.GetById(item.Id);
-
-        examResult.ApplicantId = applicant == null ? -1 : applicant.Id;
-
         return examResult;
+    }
+
+    /// <summary>
+    /// Convert <see cref="SpecialityDto"/> object into <see cref="Speciality"/>
+    /// </summary>
+    /// <param name="item">Item for convert</param>
+    /// <returns><see cref="Speciality"/> object</returns>
+    public Speciality GetExamResult(SpecialityDto item)
+    {
+        var speciality = mapper.Map<Speciality>(item);
+
+        return speciality;
     }
 }

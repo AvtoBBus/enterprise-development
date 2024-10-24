@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using AdmissionCommittee.Application.DTO;
 using AdmissionCommittee.Domain.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace AdmissionCommittee.Application;
 
 public class AutoMapperP : Profile
 {
@@ -12,8 +9,10 @@ public class AutoMapperP : Profile
     /// </summary>
     public AutoMapperP()
     {
+        CreateMap<Applicant, ApplicantDto>().ReverseMap();
         CreateMap<Direction, DirectionDto>().ReverseMap();
         CreateMap<ExamResult, ExamResultDto>().ReverseMap();
+        CreateMap<Speciality, SpecialityDto>().ReverseMap();
     }
 
 }
