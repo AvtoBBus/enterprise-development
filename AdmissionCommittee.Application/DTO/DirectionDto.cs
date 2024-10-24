@@ -1,9 +1,9 @@
-﻿namespace AdmissionCommittee.Domain.Models;
+﻿namespace AdmissionCommittee.Application.DTO;
 
 /// <summary>
-/// Represents an application submitted by an applicant for a specific speciality.
+/// Represents an direction submitted by an applicant for a specific speciality.
 /// </summary>
-public class Application
+public class DirectionDto
 {
     /// <summary>
     /// Unique identifier of the application.
