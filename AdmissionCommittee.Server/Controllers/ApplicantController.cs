@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using AdmissionCommittee.Domain.Models;
-using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Application.DTO;
+using AdmissionCommittee.Domain.Interfaces;
+using AdmissionCommittee.Domain.Models;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdmissionCommittee.Server.Controllers;
 
@@ -59,7 +59,7 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
         var newId = repository.GetAll().Count;
         Application.Mapper servise = new(mapper);
         var newApplicant = servise.GetApplicant(item);
-        
+
         newApplicant.Id = newId;
         repository.Add(newApplicant);
 
@@ -88,7 +88,7 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
         item.Id = id;
 
         var newApplicant = servise.GetApplicant(item);
-        
+
         var itemId = newApplicant.Id;
 
         repository.UpdateById(newApplicant, itemId);

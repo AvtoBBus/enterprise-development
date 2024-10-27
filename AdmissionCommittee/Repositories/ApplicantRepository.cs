@@ -1,12 +1,27 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
-using System.Xml.Linq;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
 public class ApplicantRepository : IRepository<Applicant, int>
 {
-    private static readonly List<Applicant> _applicants = [];
+    private static List<Applicant> _applicants = [];
+
+    public ApplicantRepository(List<Applicant> applicants)
+    {
+        _applicants = applicants;
+        //    _applicants.Add(new() { Id = 0, BirthdayDate = new DateTime(2005, 1, 18), City = "Samara", Country = "Russia", FullName = "Vladimir Vladimirovich" });
+        //    _applicants.Add(new() { Id = 1, BirthdayDate = new DateTime(2002, 2, 9), City = "Samara", Country = "Russia", FullName = "Andrew Viktorovich" });
+        //    _applicants.Add(new() { Id = 2, BirthdayDate = new DateTime(2005, 7, 8), City = "Vladivostok", Country = "Russia", FullName = "Vitaliy Vitalivich" });
+        //    _applicants.Add(new() { Id = 3, BirthdayDate = new DateTime(2004, 1, 13), City = "Samara", Country = "Russia", FullName = "Michail Michailovich" });
+        //    _applicants.Add(new() { Id = 4, BirthdayDate = new DateTime(2004, 6, 2), City = "Saints-Petersburg", Country = "Russia", FullName = "Veronika Igorevna" });
+        //    _applicants.Add(new() { Id = 5, BirthdayDate = new DateTime(2004, 2, 12), City = "Samara", Country = "Russia", FullName = "Ivan Ivanov" });
+        //    _applicants.Add(new() { Id = 6, BirthdayDate = new DateTime(2005, 2, 22), City = "Vladivostok", Country = "Russia", FullName = "Danila Danilovich" });
+        //    _applicants.Add(new() { Id = 7, BirthdayDate = new DateTime(2001, 2, 2), City = "Samara", Country = "Russia", FullName = "Maria Olegovna" });
+        //    _applicants.Add(new() { Id = 8, BirthdayDate = new DateTime(2002, 1, 4), City = "Moscow", Country = "Russia", FullName = "Sergey Sergeevich" });
+        //    _applicants.Add(new() { Id = 9, BirthdayDate = new DateTime(2004, 12, 1), City = "Vladivostok", Country = "Russia", FullName = "Vladimir Vladimirov" });
+    }
+
 
     /// <summary>
     /// Get all applicants

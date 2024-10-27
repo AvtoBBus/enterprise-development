@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using AdmissionCommittee.Application.DTO;
+﻿using AdmissionCommittee.Application.DTO;
 using AdmissionCommittee.Domain.Models;
+using AutoMapper;
 
 public class AutoMapperP : Profile
 {

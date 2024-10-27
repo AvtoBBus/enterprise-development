@@ -1,5 +1,4 @@
 using AdmissionCommittee.Tests.Fixtures;
-using System.Xml.Schema;
 
 namespace AdmissionCommittee.Tests.Tests;
 
@@ -55,16 +54,16 @@ public class TestRequests(AdmissionComitteeFixture fixture) : IClassFixture<Admi
 
 
         var query = (from specialities in _fixture.Specialities
-                                                where specialities.Name == testSpecialitieName
-                                                join applicantion in _fixture.Applications on specialities.Id equals applicantion.SpecialityId
-                                                join applicants in _fixture.Applicants on applicantion.ApplicantId equals applicants.Id
-                                                select new
-                                                {
-                                                    Applicant = applicants,
-                                                    TotalScore = _fixture.ExamResults
-                                                            .Where(examResult => examResult.ApplicantId == applicants.Id)
-                                                            .Sum(examResult => examResult.Result)
-                                                })
+                     where specialities.Name == testSpecialitieName
+                     join applicantion in _fixture.Applications on specialities.Id equals applicantion.SpecialityId
+                     join applicants in _fixture.Applicants on applicantion.ApplicantId equals applicants.Id
+                     select new
+                     {
+                         Applicant = applicants,
+                         TotalScore = _fixture.ExamResults
+                                 .Where(examResult => examResult.ApplicantId == applicants.Id)
+                                 .Sum(examResult => examResult.Result)
+                     })
                                                 .OrderByDescending(x => x.TotalScore)
                                                 .Select(x => x.Applicant.FullName)
                                                 .Distinct()

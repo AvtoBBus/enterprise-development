@@ -1,12 +1,16 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
-using System.Xml.Linq;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
 public class DirectionRepository : IRepository<Direction, int>
 {
-    private static readonly List<Direction> _directions = [];
+    private static List<Direction> _directions = [];
+
+    public DirectionRepository(List<Direction> directions)
+    {
+        _directions = directions;
+    }
 
     /// <summary>
     /// Get all applications

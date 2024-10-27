@@ -1,12 +1,16 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
-using System.Xml.Linq;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
 public class ExamResultRepository : IRepository<ExamResult, int>
 {
-    private static readonly List<ExamResult> _eResults = [];
+    private static List<ExamResult> _eResults = [];
+
+    public ExamResultRepository(List<ExamResult> examResults)
+    {
+        _eResults = examResults;
+    }
 
     /// <summary>
     /// Get all exams result

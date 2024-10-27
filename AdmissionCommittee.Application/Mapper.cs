@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using AdmissionCommittee.Application.DTO;
+﻿using AdmissionCommittee.Application.DTO;
 using AdmissionCommittee.Domain.Models;
-using AdmissionCommittee.Domain.Repositories;
+using AutoMapper;
 
 namespace AdmissionCommittee.Application;
 
@@ -27,16 +26,6 @@ public class Mapper(IMapper mapper)
     public Direction GetDirection(DirectionDto item)
     {
         var direction = mapper.Map<Direction>(item);
-
-        ApplicantRepository applicantRepository = new();
-        var applicant = applicantRepository.GetById(item.Id);
-
-        direction.ApplicantId = applicant == null ? -1 : applicant.Id;
-
-        SpecialityRepository specialityRepository = new();
-        var speciality = specialityRepository.GetById(item.Id);
-
-        direction.SpecialityId = speciality == null ? -1 : speciality.Id;
 
         return direction;
     }

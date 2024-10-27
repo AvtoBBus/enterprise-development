@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using AdmissionCommittee.Domain.Models;
+﻿using AdmissionCommittee.Application.DTO;
 using AdmissionCommittee.Domain.Interfaces;
-using AdmissionCommittee.Application.DTO;
-using AdmissionCommittee.Application;
+using AdmissionCommittee.Domain.Models;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdmissionCommittee.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class DirectionController(IRepository<Direction, int> repository, IMapper mapper) : ControllerBase
-    
+
     {
         /// <summary>
         /// Get all directions

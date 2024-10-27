@@ -1,12 +1,16 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
-using System.Xml.Linq;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
 public class SpecialityRepository : IRepository<Speciality, int>
 {
-    private static readonly List<Speciality> _specialyties = [];
+    private static List<Speciality> _specialyties = [];
+
+    public SpecialityRepository(List<Speciality> specialyties)
+    {
+        _specialyties = specialyties;
+    }
 
     /// <summary>
     /// Get all specialities

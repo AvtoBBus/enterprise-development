@@ -19,7 +19,7 @@ public class AdmissionComitteeFixture
         new() { Id = 10, ApplicantId = 4, SpecialityId = 9, Priority = 2 },
     ];
 
-    public List<Speciality> Applicants =
+    public List<Applicant> Applicants =
     [
         new() { Id = 0, BirthdayDate = new DateTime(2005, 1, 18), City = "Samara", Country = "Russia", FullName = "Vladimir Vladimirovich" },
         new() { Id = 1, BirthdayDate = new DateTime(2002, 2, 9), City = "Samara", Country = "Russia", FullName = "Andrew Viktorovich" },

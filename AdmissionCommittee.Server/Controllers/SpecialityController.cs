@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using AdmissionCommittee.Domain.Models;
+﻿using AdmissionCommittee.Application.DTO;
 using AdmissionCommittee.Domain.Interfaces;
-using AdmissionCommittee.Application.DTO;
-using AdmissionCommittee.Application;
+using AdmissionCommittee.Domain.Models;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdmissionCommittee.Server.Controllers
 {
