@@ -1,40 +1,38 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
-public class ExamResultRepository : IRepository<ExamResult, int>
+public class ExamResultRepository(AdmissionCommitteeDbContext context) : IRepository<ExamResult, int>
 {
-    private static List<ExamResult> _examResults = [];
-
-    public ExamResultRepository(List<ExamResult> examResults)
-    {
-        _examResults = examResults;
-    }
-
     /// <summary>
     /// Get all exams result
     /// </summary>
     /// <returns>Return list of <see cref="ExamResult"/> objects</returns>
-    public List<ExamResult> GetAll() => _examResults;
+    public async Task<List<ExamResult>> GetAll()
+    {
+        return await context.ExamResult.ToListAsync();
+    }
 
     /// <summary>
     /// Get exam result by id
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>Return <see cref="ExamResult"/> object if can find, else return null</returns>
-    public ExamResult? GetById(int id) => _examResults.FirstOrDefault(e => e.Id == id);
+    public async Task<ExamResult> GetById(int id)
+    {
+        return await context.ExamResult.FindAsync(id);
+    }
 
     /// <summary>
     /// Add new exam result
     /// </summary>
     /// <param name="newItem"><see cref="ExamResult"/> item</param>
-    public void Add(ExamResult newItem)
+    public async Task Add(ExamResult newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _examResults[count].Id + 1;
-        newItem.Id = newId;
-        _examResults.Add(newItem);
+        await context.ExamResult.AddAsync(newItem);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -43,16 +41,18 @@ public class ExamResultRepository : IRepository<ExamResult, int>
     /// <param name="newItem">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns>If item not found return false, else true</returns>
-    public bool Update(ExamResult newItem, int id)
+    public async Task Update(ExamResult newItem, int id)
     {
-        var item = GetById(id);
+        var item = await GetById(id);
 
-        if (item == null)
-            return false;
-
-        newItem.Id = id;
-        _examResults[id] = newItem;
-        return true;
+        if (item != null)
+        {
+            item.ApplicantId = id;
+            item.Result = newItem.Result;
+            item.ExamName = newItem.ExamName;
+            context.ExamResult.Update(item);
+            await context.SaveChangesAsync();
+        }
     }
 
     /// <summary>
@@ -60,12 +60,14 @@ public class ExamResultRepository : IRepository<ExamResult, int>
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>>If item not found return false, else true</returns>
-    public bool Delete(int id)
+    public async Task Delete(int id)
     {
-        var item = GetById(id);
+        var item = await GetById(id);
 
-        if (item == null)
-            return false;
-        return _examResults.Remove(item);
+        if (item != null)
+        {
+            context.ExamResult.Remove(item);
+            await context.SaveChangesAsync();
+        }
     }
 }

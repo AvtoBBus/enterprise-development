@@ -1,41 +1,38 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
-public class ApplicantRepository : IRepository<Applicant, int>
+public class ApplicantRepository(AdmissionCommitteeDbContext context) : IRepository<Applicant, int>
 {
-    private static List<Applicant> _applicants = [];
-
-    public ApplicantRepository(List<Applicant> applicants)
-    {
-        _applicants = applicants;
-    }
-
-
     /// <summary>
     /// Get all applicants
     /// </summary>
     /// <returns>Return list of <see cref="Applicant"/> objects</returns>
-    public List<Applicant> GetAll() => _applicants;
+    public async Task<List<Applicant>> GetAll()
+    {
+        return await context.Applicant.ToListAsync();
+    }
 
     /// <summary>
     /// Get applicant by id
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>Return <see cref="Applicant"/> object if can find, else return null</returns>
-    public Applicant? GetById(int id) => _applicants.FirstOrDefault(a => a.Id == id);
+    public async Task<Applicant> GetById(int id)
+    {
+        return await context.Applicant.FindAsync(id);
+    }
 
     /// <summary>
     /// Add new applicant
     /// </summary>
     /// <param name="newItem"><see cref="Applicant"/> item</param>
-    public void Add(Applicant newItem)
+    public async Task Add(Applicant newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _applicants[count].Id + 1;
-        newItem.Id = newId;
-        _applicants.Add(newItem);
+        await context.Applicant.AddAsync(newItem);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -44,16 +41,19 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// <param name="newItem">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns>If item not found return false, else true</returns>
-    public bool Update(Applicant newItem, int id)
+    public async Task Update(Applicant newItem, int id)
     {
-        var item = GetById(id);
-
-        if (item == null)
-            return false;
-
-        newItem.Id = id;
-        _applicants[id] = newItem;
-        return true;
+        var item = await GetById(id);
+        
+        if (item != null)
+        {
+            item.FullName = newItem.FullName;
+            item.BirthdayDate = newItem.BirthdayDate;
+            item.City = newItem.City;
+            item.Country = newItem.Country;
+            context.Applicant.Update(item);
+            await context.SaveChangesAsync();
+        }
     }
 
     /// <summary>
@@ -61,12 +61,14 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>>If item not found return false, else true</returns>
-    public bool Delete(int id)
+    public async Task Delete(int id)
     {
-        var item = GetById(id);
+        var item = await GetById(id);
 
-        if (item == null)
-            return false;
-        return _applicants.Remove(item);
+        if (item != null)
+        {
+            context.Applicant.Remove(item);
+            await context.SaveChangesAsync();
+        }
     }
 }

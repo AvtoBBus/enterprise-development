@@ -17,9 +17,9 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="200">Success</response>
     /// <response code="404">Not Found</response>
     [HttpGet]
-    public ActionResult<IEnumerable<Applicant>> Get()
+    public async Task<ActionResult<IEnumerable<Applicant>>> Get()
     {
-        var applicationDto = repository.GetAll();
+        var applicationDto = await repository.GetAll();
 
         if (applicationDto == null) return NotFound();
         return Ok(applicationDto);
@@ -33,9 +33,9 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="200">Success</response>
     /// <response code="404">Not Found</response>
     [HttpGet("{id}")]
-    public ActionResult<Applicant> Get(int id)
+    public async Task<ActionResult<Applicant>> Get(int id)
     {
-        var applicant = repository.GetById(id);
+        var applicant = await repository.GetById(id);
 
         if (applicant == null)
             return NotFound();
@@ -51,12 +51,12 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="201">Created</response>
     /// <response code="400">Bad Request</response>
     [HttpPost]
-    public IActionResult Post([FromBody] ApplicantDto item)
+    public async Task<IActionResult> Post([FromBody] ApplicantDto item)
     {
         if (item == null) return BadRequest();
 
         var newItem = mapper.Map<Applicant>(item);
-        repository.Add(newItem);
+        await repository.Add(newItem);
 
         return Ok(newItem);
     }
@@ -71,12 +71,12 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] ApplicantDto item)
+    public async Task<IActionResult> Put(int id, [FromBody] ApplicantDto item)
     {
         if (item == null || id < 0) return BadRequest();
         
         var newItem = mapper.Map<Applicant>(item);
-        repository.Update(newItem, id);
+        await repository.Update(newItem, id);
 
         return Ok();
     }
@@ -89,11 +89,11 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="400">Bad Request</response>
     /// <response code="404">Not Found</response>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         if (id < 0) return BadRequest();
 
-        repository.Delete(id);
+        await repository.Delete(id);
 
         return Ok();
     }

@@ -1,40 +1,38 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
-public class SpecialityRepository : IRepository<Speciality, int>
+public class SpecialityRepository(AdmissionCommitteeDbContext context) : IRepository<Speciality, int>
 {
-    private static List<Speciality> _specialyties = [];
-
-    public SpecialityRepository(List<Speciality> specialyties)
-    {
-        _specialyties = specialyties;
-    }
-
     /// <summary>
     /// Get all specialities
     /// </summary>
     /// <returns>Return list of <see cref="Speciality"/> objects</returns>
-    public List<Speciality> GetAll() => _specialyties;
+    public async Task<List<Speciality>> GetAll()
+    {
+        return await context.Speciality.ToListAsync();
+    }
 
     /// <summary>
     /// Get speciality by id
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>Return <see cref="Speciality"/> object if can find, else return null</returns>
-    public Speciality? GetById(int id) => _specialyties.FirstOrDefault(s => s.Id == id);
+    public async Task<Speciality> GetById(int id)
+    {
+        return await context.Speciality.FindAsync(id);
+    }
 
     /// <summary>
     /// Add new speciality
     /// </summary>
     /// <param name="newItem"><see cref="Speciality"/> item</param>
-    public void Add(Speciality newItem)
+    public async Task Add(Speciality newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _specialyties[count].Id + 1;
-        newItem.Id = newId;
-        _specialyties.Add(newItem);
+        await context.Speciality.AddAsync(newItem);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -43,30 +41,33 @@ public class SpecialityRepository : IRepository<Speciality, int>
     /// <param name="newItem">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns>If item not found return false, else true</returns>
-    public bool Update(Speciality newItem, int id)
+    public async Task Update(Speciality newItem, int id)
     {
-        var item = GetById(id);
+        var item = await GetById(id);
 
-        if (item == null)
-            return false;
-
-        newItem.Id = id;
-        _specialyties[id] = newItem;
-        return true;
+        if (item != null)
+        {
+            item.Name = newItem.Name;
+            item.Faculity = newItem.Faculity;
+            item.Number = newItem.Number;
+            context.Speciality.Update(item);
+            await context.SaveChangesAsync();
+        }
     }
-
 
     /// <summary>
     /// Delete speciality item by id
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>>If item not found return false, else true</returns>
-    public bool Delete(int id)
+    public async Task Delete(int id)
     {
-        var item = GetById(id);
+        var item = await GetById(id);
 
-        if (item == null)
-            return false;
-        return _specialyties.Remove(item);
+        if (item != null)
+        {
+            context.Speciality.Remove(item);
+            await context.SaveChangesAsync();
+        }
     }
 }

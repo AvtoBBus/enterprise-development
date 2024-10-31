@@ -16,15 +16,12 @@ public class TasksController(
     ) : ControllerBase
 {
 
-    private readonly List<Applicant> _applicants = applicantRepository.GetAll();
-    private readonly List<Direction> _directions = directionRepository.GetAll();
-    private readonly List<ExamResult> _examResults = examResultRepository.GetAll();
-    private readonly List<Speciality> _specialities = specialityRepository.GetAll();
-
     [HttpGet("1")]
-    public ActionResult<IEnumerable<Applicant>> ApplicantsByCity(string testCity)
+    public async Task<ActionResult<IEnumerable<Applicant>>> ApplicantsByCity(string testCity)
     {
         if (string.IsNullOrEmpty(testCity)) return BadRequest();
+
+        var _applicants = await applicantRepository.GetAll();
 
         var query = _applicants.Where(a => a.City == testCity)
                     .ToList();
@@ -33,9 +30,11 @@ public class TasksController(
     }
 
     [HttpGet("2")]
-    public ActionResult<IEnumerable<Applicant>> OlderApplicants(int testYear, DateTime testDateTime)
+    public async Task<ActionResult<IEnumerable<Applicant>>> OlderApplicants(int testYear, DateTime testDateTime)
     {
         if (testYear < 0) return BadRequest();
+        
+        var _applicants = await applicantRepository.GetAll();
 
         var query = _applicants.Where(a => a.BirthdayDate.AddYears(testYear) < testDateTime)
                     .OrderBy(a => a.FullName)
@@ -45,9 +44,14 @@ public class TasksController(
     }
 
     [HttpGet("3")]
-    public ActionResult<IEnumerable<ApplicantTotalScoreDto>> SelectBySpeciality(string testSpecialitiesName)
+    public async Task<ActionResult<IEnumerable<ApplicantTotalScoreDto>>> SelectBySpeciality(string testSpecialitiesName)
     {
         if (string.IsNullOrEmpty(testSpecialitiesName)) return BadRequest();
+
+        var _applicants = await applicantRepository.GetAll();
+        var _directions = await directionRepository.GetAll();
+        var _specialities = await specialityRepository.GetAll();
+        var _examResults = await examResultRepository.GetAll();
 
         var query = (from specialities in _specialities
                      where specialities.Name == testSpecialitiesName
@@ -68,10 +72,12 @@ public class TasksController(
     }
 
     [HttpGet("4")]
-    public ActionResult<IEnumerable<DirectionsGroupWithCountDto>> FirstPrioritySpecialitiesByApplicantsAmount(int testPriorityValue)
+    public async Task<ActionResult<IEnumerable<DirectionsGroupWithCountDto>>> FirstPrioritySpecialitiesByApplicantsAmount(int testPriorityValue)
     {
         if (testPriorityValue < 0) return BadRequest();
-        
+
+        var _directions = await directionRepository.GetAll();
+
         var query = _directions
                     .Where(direction => direction.Priority == testPriorityValue)
                     .GroupBy(direction => direction.SpecialityId)
@@ -86,8 +92,11 @@ public class TasksController(
     }
 
     [HttpGet("5")]
-    public ActionResult<IEnumerable<ApplicantWithScoreDto>> TopRatedApplicants()
+    public async Task<ActionResult<IEnumerable<ApplicantWithScoreDto>>> TopRatedApplicants()
     {
+        var _applicants = await applicantRepository.GetAll();
+        var _examResults = await examResultRepository.GetAll();
+
         var query = _applicants
                     .Select(applicant => new
                     {
@@ -103,8 +112,12 @@ public class TasksController(
     }
 
     [HttpGet("6")]
-    public ActionResult<IEnumerable<ApplicantWithSpecialityDto>> FavoriteSpecialitiesByopRatedApplicants()
+    public async Task<ActionResult<IEnumerable<ApplicantWithSpecialityDto>>> FavoriteSpecialitiesByopRatedApplicants()
     {
+        var _applicants = await applicantRepository.GetAll();
+        var _directions = await directionRepository.GetAll();
+        var _examResults = await examResultRepository.GetAll();
+
         var maxScoreByExam = _examResults
                    .GroupBy(examRes => examRes.ExamName)
                    .Select(Group => new

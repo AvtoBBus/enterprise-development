@@ -18,9 +18,9 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Not Found</response>
         [HttpGet]
-        public ActionResult<IEnumerable<ExamResult>> Get()
+        public async Task<ActionResult<IEnumerable<ExamResult>>> Get()
         {
-            var direction = repository.GetAll();
+            var direction = await repository.GetAll();
 
             if (direction == null) return NotFound();
             return Ok(direction);
@@ -34,9 +34,9 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Not Found</response>
         [HttpGet("{id}")]
-        public ActionResult<ExamResult> Get(int id)
+        public async Task<ActionResult<ExamResult>> Get(int id)
         {
-            var direction = repository.GetById(id);
+            var direction = await repository.GetById(id);
 
             if (direction == null)
                 return NotFound();
@@ -52,12 +52,12 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="201">Created</response>
         /// <response code="400">Bad Request</response>
         [HttpPost]
-        public ActionResult Post([FromBody] ExamResultDto item)
+        public async Task<ActionResult> Post([FromBody] ExamResultDto item)
         {
             if (item == null) return BadRequest();
 
             var newItem = mapper.Map<ExamResult>(item);
-            repository.Add(newItem);
+            await repository.Add(newItem);
 
             return Ok(newItem);
         }
@@ -72,12 +72,12 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ExamResultDto item)
+        public async Task<IActionResult> Put(int id, [FromBody] ExamResultDto item)
         {
             if (item == null || id < 0) return BadRequest();
 
             var newItem = mapper.Map<ExamResult>(item);
-            repository.Update(newItem, id);
+            await repository.Update(newItem, id);
 
             return Ok();
         }
@@ -90,11 +90,11 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="400">Bad Request</response>
         /// <response code="404">Not Found</response>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id < 0) return BadRequest();
 
-            repository.Delete(id);
+            await repository.Delete(id);
 
             return Ok();
         }
