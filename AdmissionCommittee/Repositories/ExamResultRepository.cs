@@ -33,7 +33,7 @@ public class ExamResultRepository : IRepository<ExamResult, int>
     public void Add(ExamResult newItem)
     {
         _examResultCount++;
-         var newId = _examResultCount;
+        var newId = _examResultCount;
         newItem.Id = newId;
         _examResults.Add(newItem);
     }

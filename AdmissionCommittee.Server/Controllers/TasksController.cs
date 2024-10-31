@@ -66,7 +66,7 @@ public class TasksController(
     public ActionResult<IEnumerable<DirectionsGroupWithCountDto>> FirstPrioritySpecialitiesByApplicantsAmount(int testPriorityValue)
     {
         if (testPriorityValue < 0) return BadRequest();
-        
+
         var query = directionRepository.GetAll()
                     .Where(direction => direction.Priority == testPriorityValue)
                     .GroupBy(direction => direction.SpecialityId)

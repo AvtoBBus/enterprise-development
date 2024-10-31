@@ -15,15 +15,18 @@ namespace AdmissionCommittee.Server
             while (!textFieldParser.EndOfData)
             {
                 var rows = textFieldParser.ReadFields();
-                Applicant applicant = new Applicant
+                if (rows != null)
                 {
-                    Id = int.Parse(rows[0]),
-                    BirthdayDate = DateTime.ParseExact(rows[1], "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    City = rows[2],
-                    Country = rows[3],
-                    FullName = rows[4]
-                };
-                applicants.Add(applicant);
+                    Applicant applicant = new Applicant
+                    {
+                        Id = int.Parse(rows[0]),
+                        BirthdayDate = DateTime.ParseExact(rows[1], "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                        City = rows[2],
+                        Country = rows[3],
+                        FullName = rows[4]
+                    };
+                    applicants.Add(applicant);
+                }
             }
 
             return applicants;
@@ -38,14 +41,17 @@ namespace AdmissionCommittee.Server
             while (!textFieldParser.EndOfData)
             {
                 var rows = textFieldParser.ReadFields();
-                Direction direction = new Direction
+                if (rows != null)
                 {
-                    Id = int.Parse(rows[0]),
-                    ApplicantId = int.Parse(rows[1]),
-                    SpecialityId = int.Parse(rows[2]),
-                    Priority = int.Parse(rows[3])
-                };
-                directions.Add(direction);
+                    Direction direction = new Direction
+                    {
+                        Id = int.Parse(rows[0]),
+                        ApplicantId = int.Parse(rows[1]),
+                        SpecialityId = int.Parse(rows[2]),
+                        Priority = int.Parse(rows[3])
+                    };
+                    directions.Add(direction);
+                }
             }
 
             return directions;
@@ -60,14 +66,17 @@ namespace AdmissionCommittee.Server
             while (!textFieldParser.EndOfData)
             {
                 var rows = textFieldParser.ReadFields();
-                ExamResult eResult = new ExamResult
+                if (rows != null)
                 {
-                    Id = int.Parse(rows[0]),
-                    ApplicantId = int.Parse(rows[1]),
-                    ExamName = rows[2],
-                    Result = int.Parse(rows[3]),
-                };
-                examResults.Add(eResult);
+                    ExamResult eResult = new ExamResult
+                    {
+                        Id = int.Parse(rows[0]),
+                        ApplicantId = int.Parse(rows[1]),
+                        ExamName = rows[2],
+                        Result = int.Parse(rows[3]),
+                    };
+                    examResults.Add(eResult);
+                }
             }
 
             return examResults;
@@ -82,14 +91,18 @@ namespace AdmissionCommittee.Server
             while (!textFieldParser.EndOfData)
             {
                 var rows = textFieldParser.ReadFields();
-                Speciality speciality = new Speciality
+                if (rows != null)
                 {
-                    Id = int.Parse(rows[0]),
-                    Number = rows[1],
-                    Name = rows[2],
-                    Faculity = rows[3],
-                };
-                specialities.Add(speciality);
+                    Speciality speciality = new Speciality
+                    {
+                        Id = int.Parse(rows[0]),
+                        Number = rows[1],
+                        Name = rows[2],
+                        Faculity = rows[3],
+                    };
+                    specialities.Add(speciality);
+                }
+                
             }
 
             return specialities;

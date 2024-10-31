@@ -77,7 +77,7 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
 
         var checkItem = repository.GetById(id);
         if (checkItem == null) return BadRequest();
-        
+
         var newItem = mapper.Map<Applicant>(item);
         repository.Update(newItem, id);
 

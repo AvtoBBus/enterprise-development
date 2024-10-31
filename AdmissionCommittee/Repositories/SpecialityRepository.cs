@@ -1,6 +1,5 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
-using System.Data;
 
 namespace AdmissionCommittee.Domain.Repositories;
 

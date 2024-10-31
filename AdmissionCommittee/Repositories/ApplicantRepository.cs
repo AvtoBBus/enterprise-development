@@ -34,7 +34,7 @@ public class ApplicantRepository : IRepository<Applicant, int>
     public void Add(Applicant newItem)
     {
         _applicantsCount++;
-        var newId =  _applicantsCount;
+        var newId = _applicantsCount;
         newItem.Id = newId;
         _applicants.Add(newItem);
     }
