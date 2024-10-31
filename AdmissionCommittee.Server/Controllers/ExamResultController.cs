@@ -74,7 +74,10 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] ExamResultDto item)
         {
-            if (item == null || id < 0) return BadRequest();
+            if (id < 0) return BadRequest();
+
+            var checkItem = repository.GetById(id);
+            if (checkItem == null) return BadRequest();
 
             var newItem = mapper.Map<ExamResult>(item);
             repository.Update(newItem, id);

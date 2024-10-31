@@ -6,7 +6,7 @@ namespace AdmissionCommittee.Domain.Repositories;
 public class DirectionRepository : IRepository<Direction, int>
 {
     private static List<Direction> _directions = [];
-
+    private static int _directionCount = 0;
     public DirectionRepository(List<Direction> directions)
     {
         _directions = directions;
@@ -31,8 +31,8 @@ public class DirectionRepository : IRepository<Direction, int>
     /// <param name="newItem"><see cref="Direction"/> item</param>
     public void Add(Direction newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _directions[count].Id + 1;
+        _directionCount++;
+        var newId = _directionCount;
         newItem.Id = newId;
         _directions.Add(newItem);
     }

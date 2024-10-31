@@ -6,6 +6,7 @@ namespace AdmissionCommittee.Domain.Repositories;
 public class ApplicantRepository : IRepository<Applicant, int>
 {
     private static List<Applicant> _applicants = [];
+    private static int _applicantsCount = 0;
 
     public ApplicantRepository(List<Applicant> applicants)
     {
@@ -32,8 +33,8 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// <param name="newItem"><see cref="Applicant"/> item</param>
     public void Add(Applicant newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _applicants[count].Id + 1;
+        _applicantsCount++;
+        var newId =  _applicantsCount;
         newItem.Id = newId;
         _applicants.Add(newItem);
     }

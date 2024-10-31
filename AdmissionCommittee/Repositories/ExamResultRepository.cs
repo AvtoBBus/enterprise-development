@@ -6,6 +6,7 @@ namespace AdmissionCommittee.Domain.Repositories;
 public class ExamResultRepository : IRepository<ExamResult, int>
 {
     private static List<ExamResult> _examResults = [];
+    private static int _examResultCount = 0;
 
     public ExamResultRepository(List<ExamResult> examResults)
     {
@@ -31,8 +32,8 @@ public class ExamResultRepository : IRepository<ExamResult, int>
     /// <param name="newItem"><see cref="ExamResult"/> item</param>
     public void Add(ExamResult newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _examResults[count].Id + 1;
+        _examResultCount++;
+         var newId = _examResultCount;
         newItem.Id = newId;
         _examResults.Add(newItem);
     }

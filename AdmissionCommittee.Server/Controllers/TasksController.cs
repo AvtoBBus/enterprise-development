@@ -2,7 +2,6 @@
 using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 
 namespace AdmissionCommittee.Server.Controllers;
 
@@ -16,47 +15,43 @@ public class TasksController(
     ) : ControllerBase
 {
 
-    private readonly List<Applicant> _applicants = applicantRepository.GetAll();
-    private readonly List<Direction> _directions = directionRepository.GetAll();
-    private readonly List<ExamResult> _examResults = examResultRepository.GetAll();
-    private readonly List<Speciality> _specialities = specialityRepository.GetAll();
 
-    [HttpGet("1")]
+    [HttpGet("ApplicantsByCity")]
     public ActionResult<IEnumerable<Applicant>> ApplicantsByCity(string testCity)
     {
         if (string.IsNullOrEmpty(testCity)) return BadRequest();
 
-        var query = _applicants.Where(a => a.City == testCity)
+        var query = applicantRepository.GetAll().Where(a => a.City == testCity)
                     .ToList();
 
-        return query != null ? Ok(query) : BadRequest();
+        return Ok(query);
     }
 
-    [HttpGet("2")]
+    [HttpGet("OlderApplicants")]
     public ActionResult<IEnumerable<Applicant>> OlderApplicants(int testYear, DateTime testDateTime)
     {
         if (testYear < 0) return BadRequest();
 
-        var query = _applicants.Where(a => a.BirthdayDate.AddYears(testYear) < testDateTime)
+        var query = applicantRepository.GetAll().Where(a => a.BirthdayDate.AddYears(testYear) < testDateTime)
                     .OrderBy(a => a.FullName)
                     .ToList();
 
-        return query != null ? Ok(query) : BadRequest();
+        return Ok(query);
     }
 
-    [HttpGet("3")]
+    [HttpGet("SelectBySpeciality")]
     public ActionResult<IEnumerable<ApplicantTotalScoreDto>> SelectBySpeciality(string testSpecialitiesName)
     {
         if (string.IsNullOrEmpty(testSpecialitiesName)) return BadRequest();
 
-        var query = (from specialities in _specialities
+        var query = (from specialities in specialityRepository.GetAll()
                      where specialities.Name == testSpecialitiesName
-                     join directions in _directions on specialities.Id equals directions.SpecialityId
-                     join applicants in _applicants on directions.ApplicantId equals applicants.Id
+                     join directions in directionRepository.GetAll() on specialities.Id equals directions.SpecialityId
+                     join applicants in applicantRepository.GetAll() on directions.ApplicantId equals applicants.Id
                      select new
                      {
                          Applicant = applicants,
-                         TotalScore = _examResults
+                         TotalScore = examResultRepository.GetAll()
                                  .Where(examResult => examResult.ApplicantId == applicants.Id)
                                  .Sum(examResult => examResult.Result)
                      })
@@ -67,12 +62,12 @@ public class TasksController(
         return query != null ? Ok(query) : BadRequest();
     }
 
-    [HttpGet("4")]
+    [HttpGet("FirstPrioritySpecialitiesByApplicantsAmount")]
     public ActionResult<IEnumerable<DirectionsGroupWithCountDto>> FirstPrioritySpecialitiesByApplicantsAmount(int testPriorityValue)
     {
         if (testPriorityValue < 0) return BadRequest();
         
-        var query = _directions
+        var query = directionRepository.GetAll()
                     .Where(direction => direction.Priority == testPriorityValue)
                     .GroupBy(direction => direction.SpecialityId)
                     .Select(directions => new
@@ -82,30 +77,30 @@ public class TasksController(
                     })
                     .ToList();
 
-        return query != null ? Ok(query) : BadRequest();
+        return Ok(query);
     }
 
-    [HttpGet("5")]
+    [HttpGet("TopRatedApplicants")]
     public ActionResult<IEnumerable<ApplicantWithScoreDto>> TopRatedApplicants()
     {
-        var query = _applicants
+        var query = applicantRepository.GetAll()
                     .Select(applicant => new
                     {
                         Applicant = applicant,
-                        Score = _examResults
+                        Score = examResultRepository.GetAll()
                         .Where(examRes => examRes.ApplicantId == applicant.Id)
                         .Sum(examRes => examRes.Result)
                     }).OrderByDescending(a => a.Score)
                     .Take(5)
                     .ToList();
 
-        return query != null ? Ok(query) : BadRequest();
+        return Ok(query);
     }
 
-    [HttpGet("6")]
+    [HttpGet("FavoriteSpecialitiesByopRatedApplicants")]
     public ActionResult<IEnumerable<ApplicantWithSpecialityDto>> FavoriteSpecialitiesByopRatedApplicants()
     {
-        var maxScoreByExam = _examResults
+        var maxScoreByExam = examResultRepository.GetAll()
                    .GroupBy(examRes => examRes.ExamName)
                    .Select(Group => new
                    {
@@ -115,7 +110,7 @@ public class TasksController(
 
         var query = maxScoreByExam
                 .Join(
-                    _examResults,
+                    examResultRepository.GetAll(),
                     maxScore => maxScore.MaxScore,
                     examRes => examRes.Result,
                     (maxScore, examRes) => new
@@ -126,7 +121,7 @@ public class TasksController(
                 )
                 .Where(joined => joined.MaxScore.ExamName == joined.ExamRes.ExamName)
                 .Join(
-                    _applicants,
+                    applicantRepository.GetAll(),
                     maxScore => maxScore.ExamRes.ApplicantId,
                     applicant => applicant.Id,
                     (maxScore, applicant) => new
@@ -136,7 +131,7 @@ public class TasksController(
                     }
                 )
                 .Join(
-                    _directions,
+                    directionRepository.GetAll(),
                     maxScore => maxScore.Applicant.Id,
                     direction => direction.ApplicantId,
                     (maxScore, direction) => new

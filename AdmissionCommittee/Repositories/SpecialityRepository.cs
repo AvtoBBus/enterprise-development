@@ -1,11 +1,13 @@
 ﻿using AdmissionCommittee.Domain.Interfaces;
 using AdmissionCommittee.Domain.Models;
+using System.Data;
 
 namespace AdmissionCommittee.Domain.Repositories;
 
 public class SpecialityRepository : IRepository<Speciality, int>
 {
     private static List<Speciality> _specialyties = [];
+    private static int _specialytiesCount = 0;
 
     public SpecialityRepository(List<Speciality> specialyties)
     {
@@ -31,8 +33,8 @@ public class SpecialityRepository : IRepository<Speciality, int>
     /// <param name="newItem"><see cref="Speciality"/> item</param>
     public void Add(Speciality newItem)
     {
-        var count = GetAll().Count - 1;
-        var newId = _specialyties[count].Id + 1;
+        _specialytiesCount++;
+        var newId = _specialytiesCount;
         newItem.Id = newId;
         _specialyties.Add(newItem);
     }
