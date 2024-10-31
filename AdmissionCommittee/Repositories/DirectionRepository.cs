@@ -31,6 +31,9 @@ public class DirectionRepository : IRepository<Direction, int>
     /// <param name="newItem"><see cref="Direction"/> item</param>
     public void Add(Direction newItem)
     {
+        var count = GetAll().Count - 1;
+        var newId = _directions[count].Id + 1;
+        newItem.Id = newId;
         _directions.Add(newItem);
     }
 
@@ -40,13 +43,15 @@ public class DirectionRepository : IRepository<Direction, int>
     /// <param name="newItem">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns>If item not found return false, else true</returns>
-    public bool UpdateById(Direction newItem, int id)
+    public bool Update(Direction newItem, int id)
     {
-        var item_id = _directions.FindIndex(d => d.Id == id);
-        if (item_id == -1)
+        var item = GetById(id);
+
+        if (item == null)
             return false;
 
-        _directions[item_id] = newItem;
+        newItem.Id = id;
+        _directions[id] = newItem;
         return true;
     }
 
@@ -57,10 +62,10 @@ public class DirectionRepository : IRepository<Direction, int>
     /// <returns>>If item not found return false, else true</returns>
     public bool Delete(int id)
     {
-        var enterprise = GetById(id);
+        var item = GetById(id);
 
-        if (enterprise == null)
+        if (item == null)
             return false;
-        return _directions.Remove(enterprise);
+        return _directions.Remove(item);
     }
 }

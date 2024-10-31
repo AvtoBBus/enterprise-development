@@ -2,12 +2,14 @@
 using AdmissionCommittee.Domain.Models;
 using AutoMapper;
 
-public class AutoMapperP : Profile
+namespace AdmissionCommittee.Application;
+
+public class AutoMapperProfile : Profile
 {
     /// <summary>
     /// Convert from DTO into objects
     /// </summary>
-    public AutoMapperP()
+    public AutoMapperProfile()
     {
         CreateMap<Applicant, ApplicantDto>().ReverseMap();
         CreateMap<Direction, DirectionDto>().ReverseMap();

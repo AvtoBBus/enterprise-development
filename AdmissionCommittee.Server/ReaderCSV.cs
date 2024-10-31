@@ -9,16 +9,16 @@ namespace AdmissionCommittee.Server
         public static List<Applicant> GetApplicants(string fileName)
         {
             var applicants = new List<Applicant>();
-            using (TextFieldParser textFieldParser = new TextFieldParser(fileName))
+            using var textFieldParser = new TextFieldParser(fileName);
             {
                 textFieldParser.TextFieldType = FieldType.Delimited;
                 textFieldParser.SetDelimiters(";");
                 while (!textFieldParser.EndOfData)
                 {
-                    string[] rows = textFieldParser.ReadFields();
+                    var rows = textFieldParser.ReadFields();
                     Applicant applicant = new Applicant
                     {
-                        Id = Int32.Parse(rows[0]),
+                        Id = int.Parse(rows[0]),
                         BirthdayDate = DateTime.ParseExact(rows[1], "dd.MM.yyyy", CultureInfo.InvariantCulture),
                         City = rows[2],
                         Country = rows[3],
@@ -34,19 +34,19 @@ namespace AdmissionCommittee.Server
         public static List<Direction> GetDirections(string fileName)
         {
             var directions = new List<Direction>();
-            using (TextFieldParser textFieldParser = new TextFieldParser(fileName))
+            using var textFieldParser = new TextFieldParser(fileName);
             {
                 textFieldParser.TextFieldType = FieldType.Delimited;
                 textFieldParser.SetDelimiters(";");
                 while (!textFieldParser.EndOfData)
                 {
-                    string[] rows = textFieldParser.ReadFields();
+                    var rows = textFieldParser.ReadFields();
                     Direction direction = new Direction
                     {
-                        Id = Int32.Parse(rows[0]),
-                        ApplicantId = Int32.Parse(rows[1]),
-                        SpecialityId = Int32.Parse(rows[2]),
-                        Priority = Int32.Parse(rows[3])
+                        Id = int.Parse(rows[0]),
+                        ApplicantId = int.Parse(rows[1]),
+                        SpecialityId = int.Parse(rows[2]),
+                        Priority = int.Parse(rows[3])
                     };
                     directions.Add(direction);
                 }
@@ -58,19 +58,19 @@ namespace AdmissionCommittee.Server
         public static List<ExamResult> GetExamResults(string fileName)
         {
             var examResults = new List<ExamResult>();
-            using (TextFieldParser textFieldParser = new TextFieldParser(fileName))
+            using var textFieldParser = new TextFieldParser(fileName);
             {
                 textFieldParser.TextFieldType = FieldType.Delimited;
                 textFieldParser.SetDelimiters(";");
                 while (!textFieldParser.EndOfData)
                 {
-                    string[] rows = textFieldParser.ReadFields();
+                    var rows = textFieldParser.ReadFields();
                     ExamResult eResult = new ExamResult
                     {
-                        Id = Int32.Parse(rows[0]),
-                        ApplicantId = Int32.Parse(rows[1]),
+                        Id = int.Parse(rows[0]),
+                        ApplicantId = int.Parse(rows[1]),
                         ExamName = rows[2],
-                        Result = Int32.Parse(rows[3]),
+                        Result = int.Parse(rows[3]),
                     };
                     examResults.Add(eResult);
                 }
@@ -82,16 +82,16 @@ namespace AdmissionCommittee.Server
         public static List<Speciality> GetSpecialities(string fileName)
         {
             var specialities = new List<Speciality>();
-            using (TextFieldParser textFieldParser = new TextFieldParser(fileName))
+            using var textFieldParser = new TextFieldParser(fileName);
             {
                 textFieldParser.TextFieldType = FieldType.Delimited;
                 textFieldParser.SetDelimiters(";");
                 while (!textFieldParser.EndOfData)
                 {
-                    string[] rows = textFieldParser.ReadFields();
+                    var rows = textFieldParser.ReadFields();
                     Speciality speciality = new Speciality
                     {
-                        Id = Int32.Parse(rows[0]),
+                        Id = int.Parse(rows[0]),
                         Number = rows[1],
                         Name = rows[2],
                         Faculity = rows[3],

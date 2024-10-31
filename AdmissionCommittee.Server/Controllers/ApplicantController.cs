@@ -17,7 +17,7 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="200">Success</response>
     /// <response code="404">Not Found</response>
     [HttpGet]
-    public ActionResult<IEnumerable<ApplicantDto>> Get()
+    public ActionResult<IEnumerable<Applicant>> Get()
     {
         var applicationDto = repository.GetAll();
 
@@ -29,11 +29,11 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// Get applicant by id
     /// </summary>
     /// <param name="id">Applicant`s id</param>
-    /// <returns>Список объектов <see cref="Applicant"/></returns>
+    /// <returns>List of <see cref="Applicant"/> objects</returns>
     /// <response code="200">Success</response>
     /// <response code="404">Not Found</response>
     [HttpGet("{id}")]
-    public ActionResult<ApplicantDto> Get(int id)
+    public ActionResult<Applicant> Get(int id)
     {
         var applicant = repository.GetById(id);
 
@@ -53,17 +53,12 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     [HttpPost]
     public IActionResult Post([FromBody] ApplicantDto item)
     {
-
         if (item == null) return BadRequest();
 
-        var newId = repository.GetAll().Count;
-        Application.Mapper servise = new(mapper);
-        var newApplicant = servise.GetApplicant(item);
+        var newItem = mapper.Map<Applicant>(item);
+        repository.Add(newItem);
 
-        newApplicant.Id = newId;
-        repository.Add(newApplicant);
-
-        return Ok(newApplicant);
+        return Ok(newItem);
     }
 
 
@@ -72,26 +67,16 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <param name="item">Item to insert</param>
-    /// <returns>Созданный объект <see cref="Applicant"/></returns>
+    /// <returns><see cref="Applicant"/> object</returns>
     /// <response code="200">Success</response>
     /// <response code="400">Bad Request</response>
     [HttpPut("{id}")]
     public IActionResult Put(int id, [FromBody] ApplicantDto item)
     {
-
-        if (item == null || id == null) return BadRequest();
-
-
-        if (id > repository.GetAll().Count - 1 || id < 0) return BadRequest();
-
-        Application.Mapper servise = new(mapper);
-        item.Id = id;
-
-        var newApplicant = servise.GetApplicant(item);
-
-        var itemId = newApplicant.Id;
-
-        repository.UpdateById(newApplicant, itemId);
+        if (item == null || id < 0) return BadRequest();
+        
+        var newItem = mapper.Map<Applicant>(item);
+        repository.Update(newItem, id);
 
         return Ok();
     }
@@ -106,10 +91,7 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-
-        if (id == null) return BadRequest();
-
-        if (id > repository.GetAll().Count - 1 || id < 0) return BadRequest();
+        if (id < 0) return BadRequest();
 
         repository.Delete(id);
 

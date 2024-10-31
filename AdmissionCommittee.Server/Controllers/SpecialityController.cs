@@ -18,7 +18,7 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Not Found</response>
         [HttpGet]
-        public ActionResult<IEnumerable<SpecialityDto>> Get()
+        public ActionResult<IEnumerable<Speciality>> Get()
         {
             var direction = repository.GetAll();
 
@@ -30,11 +30,11 @@ namespace AdmissionCommittee.Server.Controllers
         /// Get speciality by id
         /// </summary>
         /// <param name="id">Applicant`s id</param>
-        /// <returns>Список объектов <see cref="Speciality"/></returns>
+        /// <returns>List of <see cref="Speciality"/> objects</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not Found</response>
         [HttpGet("{id}")]
-        public ActionResult<SpecialityDto> Get(int id)
+        public ActionResult<Speciality> Get(int id)
         {
             var direction = repository.GetById(id);
 
@@ -54,17 +54,12 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] SpecialityDto item)
         {
-
             if (item == null) return BadRequest();
 
-            var newId = repository.GetAll().Count;
-            Application.Mapper servise = new(mapper);
-            var newEResult = servise.GetExamResult(item);
+            var newItem = mapper.Map<Speciality>(item);
+            repository.Add(newItem);
 
-            newEResult.Id = newId;
-            repository.Add(newEResult);
-
-            return Ok(newEResult);
+            return Ok(newItem);
         }
 
 
@@ -73,26 +68,16 @@ namespace AdmissionCommittee.Server.Controllers
         /// </summary>
         /// <param name="id">Id of item</param>
         /// <param name="item">Item to insert</param>
-        /// <returns>Созданный объект <see cref="Speciality"/></returns>
+        /// <returns><see cref="Speciality"/> object</returns>
         /// <response code="200">Success</response>
         /// <response code="400">Bad Request</response>
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] SpecialityDto item)
         {
+            if (item == null || id < 0) return BadRequest();
 
-            if (item == null || id == null) return BadRequest();
-
-
-            if (id > repository.GetAll().Count - 1 || id < 0) return BadRequest();
-
-            Application.Mapper servise = new(mapper);
-            item.Id = id;
-
-            var newEResult = servise.GetExamResult(item);
-
-            var itemId = newEResult.Id;
-
-            repository.UpdateById(newEResult, itemId);
+            var newItem = mapper.Map<Speciality>(item);
+            repository.Update(newItem, id);
 
             return Ok();
         }
@@ -107,10 +92,7 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-
-            if (id == null) return BadRequest();
-
-            if (id > repository.GetAll().Count - 1 || id < 0) return BadRequest();
+            if (id < 0) return BadRequest();
 
             repository.Delete(id);
 

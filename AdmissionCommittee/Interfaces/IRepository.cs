@@ -1,6 +1,6 @@
 ﻿namespace AdmissionCommittee.Domain.Interfaces;
 
-public interface IRepository<TEntity, Tkey>
+public interface IRepository<TEntity, TKey>
 {
     /// <summary>
     /// Return all items
@@ -13,7 +13,7 @@ public interface IRepository<TEntity, Tkey>
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns></returns>
-    public TEntity? GetById(Tkey id);
+    public TEntity? GetById(TKey id);
 
     /// <summary>
     /// Add new item
@@ -28,12 +28,12 @@ public interface IRepository<TEntity, Tkey>
     /// <param name="newValue">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns></returns>
-    public bool UpdateById(TEntity newValue, Tkey id);
+    public bool Update(TEntity newValue, TKey id);
 
     /// <summary>
     /// Delete item by Id
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns></returns>
-    public bool Delete(Tkey id);
+    public bool Delete(TKey id);
 }

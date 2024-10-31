@@ -2,7 +2,6 @@
 
 public class ApplicantDto
 {
-    public required int Id { get; set; }
     public required string FullName { get; set; }
     public required DateTime BirthdayDate { get; set; }
     public required string Country { get; set; }

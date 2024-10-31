@@ -10,16 +10,6 @@ public class ApplicantRepository : IRepository<Applicant, int>
     public ApplicantRepository(List<Applicant> applicants)
     {
         _applicants = applicants;
-        //    _applicants.Add(new() { Id = 0, BirthdayDate = new DateTime(2005, 1, 18), City = "Samara", Country = "Russia", FullName = "Vladimir Vladimirovich" });
-        //    _applicants.Add(new() { Id = 1, BirthdayDate = new DateTime(2002, 2, 9), City = "Samara", Country = "Russia", FullName = "Andrew Viktorovich" });
-        //    _applicants.Add(new() { Id = 2, BirthdayDate = new DateTime(2005, 7, 8), City = "Vladivostok", Country = "Russia", FullName = "Vitaliy Vitalivich" });
-        //    _applicants.Add(new() { Id = 3, BirthdayDate = new DateTime(2004, 1, 13), City = "Samara", Country = "Russia", FullName = "Michail Michailovich" });
-        //    _applicants.Add(new() { Id = 4, BirthdayDate = new DateTime(2004, 6, 2), City = "Saints-Petersburg", Country = "Russia", FullName = "Veronika Igorevna" });
-        //    _applicants.Add(new() { Id = 5, BirthdayDate = new DateTime(2004, 2, 12), City = "Samara", Country = "Russia", FullName = "Ivan Ivanov" });
-        //    _applicants.Add(new() { Id = 6, BirthdayDate = new DateTime(2005, 2, 22), City = "Vladivostok", Country = "Russia", FullName = "Danila Danilovich" });
-        //    _applicants.Add(new() { Id = 7, BirthdayDate = new DateTime(2001, 2, 2), City = "Samara", Country = "Russia", FullName = "Maria Olegovna" });
-        //    _applicants.Add(new() { Id = 8, BirthdayDate = new DateTime(2002, 1, 4), City = "Moscow", Country = "Russia", FullName = "Sergey Sergeevich" });
-        //    _applicants.Add(new() { Id = 9, BirthdayDate = new DateTime(2004, 12, 1), City = "Vladivostok", Country = "Russia", FullName = "Vladimir Vladimirov" });
     }
 
 
@@ -42,6 +32,9 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// <param name="newItem"><see cref="Applicant"/> item</param>
     public void Add(Applicant newItem)
     {
+        var count = GetAll().Count - 1;
+        var newId = _applicants[count].Id + 1;
+        newItem.Id = newId;
         _applicants.Add(newItem);
     }
 
@@ -51,13 +44,15 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// <param name="newItem">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns>If item not found return false, else true</returns>
-    public bool UpdateById(Applicant newItem, int id)
+    public bool Update(Applicant newItem, int id)
     {
-        var item_id = _applicants.FindIndex(a => a.Id == id);
-        if (item_id == -1)
+        var item = GetById(id);
+
+        if (item == null)
             return false;
 
-        _applicants[item_id] = newItem;
+        newItem.Id = id;
+        _applicants[id] = newItem;
         return true;
     }
 
@@ -68,10 +63,10 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// <returns>>If item not found return false, else true</returns>
     public bool Delete(int id)
     {
-        var enterprise = GetById(id);
+        var item = GetById(id);
 
-        if (enterprise == null)
+        if (item == null)
             return false;
-        return _applicants.Remove(enterprise);
+        return _applicants.Remove(item);
     }
 }

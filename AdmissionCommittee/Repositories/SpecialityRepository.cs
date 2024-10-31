@@ -31,6 +31,9 @@ public class SpecialityRepository : IRepository<Speciality, int>
     /// <param name="newItem"><see cref="Speciality"/> item</param>
     public void Add(Speciality newItem)
     {
+        var count = GetAll().Count - 1;
+        var newId = _specialyties[count].Id + 1;
+        newItem.Id = newId;
         _specialyties.Add(newItem);
     }
 
@@ -40,13 +43,15 @@ public class SpecialityRepository : IRepository<Speciality, int>
     /// <param name="newItem">New item state</param>
     /// <param name="id">Id of item</param>
     /// <returns>If item not found return false, else true</returns>
-    public bool UpdateById(Speciality newItem, int id)
+    public bool Update(Speciality newItem, int id)
     {
-        var item_id = _specialyties.FindIndex(s => s.Id == id);
-        if (item_id == -1)
+        var item = GetById(id);
+
+        if (item == null)
             return false;
 
-        _specialyties[item_id] = newItem;
+        newItem.Id = id;
+        _specialyties[id] = newItem;
         return true;
     }
 
@@ -58,10 +63,10 @@ public class SpecialityRepository : IRepository<Speciality, int>
     /// <returns>>If item not found return false, else true</returns>
     public bool Delete(int id)
     {
-        var enterprise = GetById(id);
+        var item = GetById(id);
 
-        if (enterprise == null)
+        if (item == null)
             return false;
-        return _specialyties.Remove(enterprise);
+        return _specialyties.Remove(item);
     }
 }
