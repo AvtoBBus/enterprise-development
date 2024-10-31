@@ -11,6 +11,7 @@ public class ExamResultRepository : IRepository<ExamResult, int>
     public ExamResultRepository(List<ExamResult> examResults)
     {
         _examResults = examResults;
+        _examResultCount = examResults.Count;
     }
 
     /// <summary>

@@ -10,6 +10,7 @@ public class DirectionRepository : IRepository<Direction, int>
     public DirectionRepository(List<Direction> directions)
     {
         _directions = directions;
+        _directionCount = _directions.Count;
     }
 
     /// <summary>

@@ -11,6 +11,7 @@ public class SpecialityRepository : IRepository<Speciality, int>
     public SpecialityRepository(List<Speciality> specialyties)
     {
         _specialyties = specialyties;
+        _specialytiesCount = specialyties.Count;
     }
 
     /// <summary>

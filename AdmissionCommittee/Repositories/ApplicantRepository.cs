@@ -11,6 +11,7 @@ public class ApplicantRepository : IRepository<Applicant, int>
     public ApplicantRepository(List<Applicant> applicants)
     {
         _applicants = applicants;
+        _applicantsCount = applicants.Count;
     }
 
 
