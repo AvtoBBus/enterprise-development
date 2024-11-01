@@ -12,7 +12,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <returns>Return list of <see cref="ExamResult"/> objects</returns>
     public async Task<List<ExamResult>> GetAll()
     {
-        return await context.ExamResult.ToListAsync();
+        return await context.ExamResults.ToListAsync();
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <returns>Return <see cref="ExamResult"/> object if can find, else return null</returns>
     public async Task<ExamResult> GetById(int id)
     {
-        return await context.ExamResult.FindAsync(id);
+        return await context.ExamResults.FindAsync(id);
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <param name="newItem"><see cref="ExamResult"/> item</param>
     public async Task Add(ExamResult newItem)
     {
-        await context.ExamResult.AddAsync(newItem);
+        await context.ExamResults.AddAsync(newItem);
         await context.SaveChangesAsync();
     }
 
@@ -50,7 +50,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
             item.ApplicantId = id;
             item.Result = newItem.Result;
             item.ExamName = newItem.ExamName;
-            context.ExamResult.Update(item);
+            context.ExamResults.Update(item);
             await context.SaveChangesAsync();
         }
     }
@@ -66,7 +66,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
 
         if (item != null)
         {
-            context.ExamResult.Remove(item);
+            context.ExamResults.Remove(item);
             await context.SaveChangesAsync();
         }
     }

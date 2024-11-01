@@ -12,7 +12,7 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <returns>Return list of <see cref="Applicant"/> objects</returns>
     public async Task<List<Applicant>> GetAll()
     {
-        return await context.Applicant.ToListAsync();
+        return await context.Applicants.ToListAsync();
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <returns>Return <see cref="Applicant"/> object if can find, else return null</returns>
     public async Task<Applicant> GetById(int id)
     {
-        return await context.Applicant.FindAsync(id);
+        return await context.Applicants.FindAsync(id);
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <param name="newItem"><see cref="Applicant"/> item</param>
     public async Task Add(Applicant newItem)
     {
-        await context.Applicant.AddAsync(newItem);
+        await context.Applicants.AddAsync(newItem);
         await context.SaveChangesAsync();
     }
 
@@ -51,7 +51,7 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
             item.BirthdayDate = newItem.BirthdayDate;
             item.City = newItem.City;
             item.Country = newItem.Country;
-            context.Applicant.Update(item);
+            context.Applicants.Update(item);
             await context.SaveChangesAsync();
         }
     }
@@ -67,7 +67,7 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
 
         if (item != null)
         {
-            context.Applicant.Remove(item);
+            context.Applicants.Remove(item);
             await context.SaveChangesAsync();
         }
     }

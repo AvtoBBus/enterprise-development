@@ -12,7 +12,7 @@ public class SpecialityRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <returns>Return list of <see cref="Speciality"/> objects</returns>
     public async Task<List<Speciality>> GetAll()
     {
-        return await context.Speciality.ToListAsync();
+        return await context.Specialities.ToListAsync();
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class SpecialityRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <returns>Return <see cref="Speciality"/> object if can find, else return null</returns>
     public async Task<Speciality> GetById(int id)
     {
-        return await context.Speciality.FindAsync(id);
+        return await context.Specialities.FindAsync(id);
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class SpecialityRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <param name="newItem"><see cref="Speciality"/> item</param>
     public async Task Add(Speciality newItem)
     {
-        await context.Speciality.AddAsync(newItem);
+        await context.Specialities.AddAsync(newItem);
         await context.SaveChangesAsync();
     }
 
@@ -50,7 +50,7 @@ public class SpecialityRepository(AdmissionCommitteeDbContext context) : IReposi
             item.Name = newItem.Name;
             item.Faculity = newItem.Faculity;
             item.Number = newItem.Number;
-            context.Speciality.Update(item);
+            context.Specialities.Update(item);
             await context.SaveChangesAsync();
         }
     }
@@ -66,7 +66,7 @@ public class SpecialityRepository(AdmissionCommitteeDbContext context) : IReposi
 
         if (item != null)
         {
-            context.Speciality.Remove(item);
+            context.Specialities.Remove(item);
             await context.SaveChangesAsync();
         }
     }

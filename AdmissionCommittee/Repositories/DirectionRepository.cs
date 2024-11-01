@@ -12,7 +12,7 @@ public class DirectionRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <returns>Return list of <see cref="Direction"/> objects</returns>
     public async Task<List<Direction>> GetAll()
     {
-        return await context.Direction.ToListAsync();
+        return await context.Directions.ToListAsync();
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class DirectionRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <returns>Return <see cref="Direction"/> object if can find, else return null</returns>
     public async Task<Direction> GetById(int id)
     {
-        return await context.Direction.FindAsync(id);
+        return await context.Directions.FindAsync(id);
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class DirectionRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <param name="newItem"><see cref="Direction"/> item</param>
     public async Task Add(Direction newItem)
     {
-        await context.Direction.AddAsync(newItem);
+        await context.Directions.AddAsync(newItem);
         await context.SaveChangesAsync();
     }
 
@@ -50,7 +50,7 @@ public class DirectionRepository(AdmissionCommitteeDbContext context) : IReposit
             item.ApplicantId = newItem.ApplicantId;
             item.Priority = newItem.Priority;
             item.SpecialityId = newItem.SpecialityId;
-            context.Direction.Update(item);
+            context.Directions.Update(item);
             await context.SaveChangesAsync();
         }
     }
@@ -66,7 +66,7 @@ public class DirectionRepository(AdmissionCommitteeDbContext context) : IReposit
 
         if (item != null)
         {
-            context.Direction.Remove(item);
+            context.Directions.Remove(item);
             await context.SaveChangesAsync();
         }
     }

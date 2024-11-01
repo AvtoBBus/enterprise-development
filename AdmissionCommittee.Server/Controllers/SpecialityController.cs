@@ -74,7 +74,10 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] SpecialityDto item)
         {
-            if (item == null || id < 0) return BadRequest();
+            if (id < 0) return BadRequest();
+
+            var checkItem = await repository.GetById(id);
+            if (checkItem == null) return BadRequest();
 
             var newItem = mapper.Map<Speciality>(item);
             await repository.Update(newItem, id);

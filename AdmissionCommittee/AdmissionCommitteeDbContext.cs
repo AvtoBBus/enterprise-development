@@ -3,16 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdmissionCommittee.Domain;
 
-public class AdmissionCommitteeDbContext : DbContext
+public class AdmissionCommitteeDbContext(DbContextOptions<AdmissionCommitteeDbContext> options) : DbContext(options)
 {
-    public AdmissionCommitteeDbContext(DbContextOptions<AdmissionCommitteeDbContext> options) : base(options)
-    {
-    }
-
-    public DbSet<Applicant> Applicant { get; set; }
-    public DbSet<Direction> Direction { get; set; }
-    public DbSet<ExamResult> ExamResult { get; set; }
-    public DbSet<Speciality> Speciality { get; set; }
+    public DbSet<Applicant> Applicants { get; set; }
+    public DbSet<Direction> Directions { get; set; }
+    public DbSet<ExamResult> ExamResults { get; set; }
+    public DbSet<Speciality> Specialities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

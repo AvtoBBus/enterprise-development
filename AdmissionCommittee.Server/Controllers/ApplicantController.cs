@@ -73,8 +73,11 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, [FromBody] ApplicantDto item)
     {
-        if (item == null || id < 0) return BadRequest();
-        
+        if (id < 0) return BadRequest();
+
+        var checkItem = await repository.GetById(id);
+        if (checkItem == null) return BadRequest();
+
         var newItem = mapper.Map<Applicant>(item);
         await repository.Update(newItem, id);
 

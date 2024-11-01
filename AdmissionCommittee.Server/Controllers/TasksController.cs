@@ -16,7 +16,7 @@ public class TasksController(
     ) : ControllerBase
 {
 
-    [HttpGet("1")]
+    [HttpGet("ApplicantsByCity")]
     public async Task<ActionResult<IEnumerable<Applicant>>> ApplicantsByCity(string testCity)
     {
         if (string.IsNullOrEmpty(testCity)) return BadRequest();
@@ -29,7 +29,7 @@ public class TasksController(
         return query != null ? Ok(query) : BadRequest();
     }
 
-    [HttpGet("2")]
+    [HttpGet("OlderApplicants")]
     public async Task<ActionResult<IEnumerable<Applicant>>> OlderApplicants(int testYear, DateTime testDateTime)
     {
         if (testYear < 0) return BadRequest();
@@ -43,7 +43,7 @@ public class TasksController(
         return query != null ? Ok(query) : BadRequest();
     }
 
-    [HttpGet("3")]
+    [HttpGet("SelectBySpeciality")]
     public async Task<ActionResult<IEnumerable<ApplicantTotalScoreDto>>> SelectBySpeciality(string testSpecialitiesName)
     {
         if (string.IsNullOrEmpty(testSpecialitiesName)) return BadRequest();
@@ -71,7 +71,7 @@ public class TasksController(
         return query != null ? Ok(query) : BadRequest();
     }
 
-    [HttpGet("4")]
+    [HttpGet("FirstPrioritySpecialitiesByApplicantsAmount")]
     public async Task<ActionResult<IEnumerable<DirectionsGroupWithCountDto>>> FirstPrioritySpecialitiesByApplicantsAmount(int testPriorityValue)
     {
         if (testPriorityValue < 0) return BadRequest();
@@ -91,7 +91,7 @@ public class TasksController(
         return query != null ? Ok(query) : BadRequest();
     }
 
-    [HttpGet("5")]
+    [HttpGet("TopRatedApplicants")]
     public async Task<ActionResult<IEnumerable<ApplicantWithScoreDto>>> TopRatedApplicants()
     {
         var _applicants = await applicantRepository.GetAll();
@@ -111,7 +111,7 @@ public class TasksController(
         return query != null ? Ok(query) : BadRequest();
     }
 
-    [HttpGet("6")]
+    [HttpGet("FavoriteSpecialitiesByopRatedApplicants")]
     public async Task<ActionResult<IEnumerable<ApplicantWithSpecialityDto>>> FavoriteSpecialitiesByopRatedApplicants()
     {
         var _applicants = await applicantRepository.GetAll();
