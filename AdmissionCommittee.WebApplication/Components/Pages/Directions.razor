@@ -48,8 +48,8 @@
         </ModalHeader>
          <ModalBody>
             <div class="mb-3">
-                <label for="fullName">Абитуриент:</label>
-                <select @bind="newDirection.ApplicantId">
+                <label for="applicantId">Абитуриент:</label>
+                <select id="applicantId" @bind="newDirection.ApplicantId">
                     @foreach(var applicant in _applicants)
                     {
                         <option>@applicant.Id</option>
@@ -59,8 +59,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="fullName">Специальность:</label>
-                <select @bind="newDirection.SpecialityId">
+                <label for="specialityId">Специальность:</label>
+                <select id="specialityId" @bind="newDirection.SpecialityId">
                     @foreach (var speciality in _specialyties)
                     {
                         <option>@speciality.Id</option>
@@ -69,8 +69,8 @@
                 <p>@GetSpecialityName(newDirection.SpecialityId)</p>
             </div>
              <div class="mb-3">
-                <label for="birthdayDate">Приоритет:</label>
-                <input type="number" min="1" max="5" id="birthdayDate" @bind="newDirection.Priority" class="form-control" />
+                <label for="priority">Приоритет:</label>
+                <input type="number" min="1" max="5" id="priority" @bind="newDirection.Priority" class="form-control" />
             </div>
         </ModalBody>
         <ModalFooter>
@@ -108,9 +108,9 @@
         await modalRef!.Hide();
     }
 
-    private async Task DeleteDirection(int applicantId)
+    private async Task DeleteDirection(int directionId)
     {
-        await directionRepository.Delete(applicantId);
+        await directionRepository.Delete(directionId);
         _directinions = await directionRepository.GetAll();
     }
 
@@ -118,14 +118,14 @@
     {
         await directionRepository.Update(newDirection, newDirection.Id);
         newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0 };
-        await directionRepository.GetAll();
+        _directinions = await directionRepository.GetAll();
         await modalRef!.Hide();
     }
 
-    private async Task ShowUpdModal(int applicantId)
+    private async Task ShowUpdModal(int directionId)
     {
         forAdd = false;
-        newDirection = await directionRepository.GetById(applicantId);
+        newDirection = await directionRepository.GetById(directionId);
         await modalRef!.Show();
     }
 

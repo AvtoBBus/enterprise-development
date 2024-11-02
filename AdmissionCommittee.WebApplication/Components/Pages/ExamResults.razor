@@ -1,0 +1,135 @@
+﻿@page "/examResults"
+@inject IRepository<Applicant, int> applicantRepository;
+@inject IRepository<ExamResult, int> examResultsRepository;
+
+<PageTitle>Exam Results</PageTitle>
+
+<h3>Exam Results</h3>
+
+<Button class="add-new-button" Clicked="@ShowAddModal">
+    Добавить результат за экзамен
+</Button>
+
+<div class="data-header">
+    <div class="cell" style="max-width: 60px">Id</div>
+    <div class="cell" style="max-width: 300px">Абитуриент</div>
+    <div class="cell">Экзамен</div>
+    <div class="cell">Результат</div>
+    <div style="width: 100%; max-width: 50px"></div>
+    <div style="width: 100%; max-width: 50px"></div>
+</div>
+<div class="data-container">
+    @foreach (var examResult in _examResults)
+    {
+        <div class="data-row">
+            <div class="cell" style="max-width: 60px">@(examResult.Id + 1)</div>
+            <div class="cell" style="max-width: 300px">@(GetApplicantName(examResult.ApplicantId))</div>
+            <div class="cell" style="max-width: 300px">@(examResult.ExamName)</div>
+            <div class="cell">@examResult.Result</div>
+            <Button class="edit-item"
+                    @onclick="@(() => ShowUpdModal(examResult.Id))"
+                    Style="max-width: 50px">
+                UPD
+            </Button>
+            <Button class="delete-item"
+                    @onclick="@(() => DeleteExamResult(examResult.Id))"
+                    Style="max-width: 50px">
+                DEL
+            </Button>
+        </div>
+    }
+</div>
+
+<Modal @ref="modalRef" @bind-Visible="@modalVisible" style='@(modalVisible ? "display:block" : "display:none")'>
+    <ModalContent Centered>
+        <ModalHeader>
+            <h5>Добавить результат</h5>
+        </ModalHeader>
+        <ModalBody>
+            <div class="mb-3">
+                <label for="applicantId">Абитуриент:</label>
+                <select id="applicantId" @bind="newExamResult.ApplicantId">
+                    @foreach (var applicant in _applicants)
+                    {
+                        <option>@applicant.Id</option>
+                    }
+                </select>
+                <p>@GetApplicantName(newExamResult.ApplicantId)</p>
+            </div>
+
+            <div class="mb-3">
+                <label for="examName">Название экзамена:</label>
+                <input type="text" id="examName" @bind="newExamResult.ExamName" />
+            </div>
+            <div class="mb-3">
+                <label for="result">Результат:</label>
+                <input type="number" min="0" max="100" id="result" @bind="newExamResult.Result" class="form-control" />
+            </div>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@(forAdd ? AddNewExamResult : UpdateExamResult)">
+                @(forAdd ? "Добавить" : "Изменить")
+            </Button>
+            <Button Color="Color.Secondary" Clicked="@CancelHandler">
+                Отмена
+            </Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    private List<Applicant> _applicants = new();
+    private List<ExamResult> _examResults = new();
+    private Modal? modalRef = null!;
+    private ExamResult newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
+    private bool modalVisible;
+    private bool forAdd = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _applicants = await applicantRepository.GetAll();
+        _examResults = await examResultsRepository.GetAll();
+    }
+
+    private async Task AddNewExamResult()
+    {
+        await examResultsRepository.Add(newExamResult);
+        _examResults = await examResultsRepository.GetAll();
+        await modalRef!.Hide();
+    }
+
+    private async Task DeleteExamResult(int examResultId)
+    {
+        await examResultsRepository.Delete(examResultId);
+        _examResults = await examResultsRepository.GetAll();
+    }
+
+    private async Task UpdateExamResult()
+    {
+        await examResultsRepository.Update(newExamResult, newExamResult.Id);
+        newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
+        _examResults = await examResultsRepository.GetAll();
+        await modalRef!.Hide();
+    }
+
+    private async Task ShowUpdModal(int examResultId)
+    {
+        forAdd = false;
+        newExamResult = await examResultsRepository.GetById(examResultId);
+        await modalRef!.Show();
+    }
+
+    private async Task ShowAddModal()
+    {
+        forAdd = true;
+        newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
+        await modalRef!.Show();
+    }
+
+    private async Task CancelHandler()
+    {
+        await modalRef!.Hide();
+    }
+
+    private string GetApplicantName(int applicantId) => _applicants?.FirstOrDefault(a => a.Id == applicantId)?.FullName!;
+}

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionCommittee.Server",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionCommittee.Application", "AdmissionCommittee.Application\AdmissionCommittee.Application.csproj", "{ECF02BC6-8FBC-4AC6-B583-240943B056B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdmissionCommittee.WebApplication", "AdmissionCommittee.WebApplication\AdmissionCommittee.WebApplication.csproj", "{C2DFC8E3-6904-461D-AB97-C24C41A29912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmissionCommittee.WebApplication", "AdmissionCommittee.WebApplication\AdmissionCommittee.WebApplication.csproj", "{C2DFC8E3-6904-461D-AB97-C24C41A29912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,6 +2,7 @@
 @using System.Globalization;
 @inject IRepository<Applicant, int> applicantRepository;
 @inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
+@inject IRepository<ExamResult, int> examResultsRepository;
 
 <PageTitle>Applicants</PageTitle>
 
@@ -112,13 +113,20 @@
         {
             await directionRepository.Delete(d.Id);
         }
+
+        var examResults = await examResultsRepository.GetAll();
+        examResults = examResults.Select(e => e).Where(e => e.ApplicantId == applicantId).ToList();
+        foreach (var e in examResults)
+        {
+            await examResultsRepository.Delete(e.Id);
+        }
     }
 
     private async Task UpdateAppllicant()
     {
         await applicantRepository.Update(newApplicant, newApplicant.Id);
         newApplicant = new() { Id = 0, FullName = "", BirthdayDate = DateTime.ParseExact("01.01.1990", "dd.MM.yyyy", CultureInfo.InvariantCulture), City = "", Country = "" };
-        await applicantRepository.GetAll();
+        _applicants = await applicantRepository.GetAll();
         await modalRef!.Hide();
     }
 
