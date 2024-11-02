@@ -7,7 +7,7 @@
 
 <h1>Directions</h1>
 
-<Button class="add-new-button" Clicked="@ShowAddModal">
+<Button class="add-new-button" Clicked="@ShowAddModal" Color="Color.Primary">
     Добавить заявку
 </Button>
 
@@ -16,8 +16,8 @@
     <div class="cell" style="max-width: 300px">Абитуриент</div>
     <div class="cell">Специальность</div>
     <div class="cell">Приоритет</div>
-    <div style="width: 100%; max-width: 50px"></div>
-    <div style="width: 100%; max-width: 50px"></div>
+    <div style="width: 100%; max-width: 60px"></div>
+    <div style="width: 100%; max-width: 60px"></div>
 </div>
 <div class="data-container">
     @foreach (var direction in _directinions)
@@ -27,14 +27,20 @@
             <div class="cell" style="max-width: 300px">@(GetApplicantName(direction.ApplicantId))</div>
             <div class="cell">@(GetSpecialityName(direction.SpecialityId))</div>
             <div class="cell">@direction.Priority</div>
-            <Button class="edit-item"
-                    @onclick="@(() => ShowUpdModal(direction.Id))"
-                    Style="max-width: 50px">
+            <Button 
+                Color="Color.Primary"
+                class="edit-item"
+                @onclick="@(() => ShowUpdModal(direction.Id))"
+                Style="max-width: 60px"
+                TextAlignment="TextAlignment.Center">
                 UPD
             </Button>
-            <Button class="delete-item"
-                    @onclick="@(() => DeleteDirection(direction.Id))"
-                    Style="max-width: 50px">
+            <Button
+                Color="Color.Danger"
+                class="delete-item"
+                @onclick="@(() => DeleteDirection(direction.Id))"
+                Style="max-width: 60px"
+                TextAlignment="TextAlignment.Center">
                 DEL
             </Button>
         </div>

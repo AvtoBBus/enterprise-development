@@ -8,7 +8,7 @@
 
 <h1>Applicants</h1>
 
-<Button class="add-new-button" Clicked="@ShowAddModal">
+<Button class="add-new-button" Clicked="@ShowAddModal" Color="Color.Primary">
     Добавить Абитуриента
 </Button>
 
@@ -18,8 +18,8 @@
     <div class="cell">Дата рождения</div>
     <div class="cell">Родной город</div>
     <div class="cell">Родная страна</div>
-    <div style="width: 100%; max-width: 50px"></div>
-    <div style="width: 100%; max-width: 50px"></div>
+    <div style="width: 100%; max-width: 60px"></div>
+    <div style="width: 100%; max-width: 60px"></div>
 </div>
 <div class="data-container">
 @foreach (var applicant in _applicants)
@@ -31,17 +31,18 @@
         <div class="cell">@applicant.City</div>
         <div class="cell">@applicant.Country</div>
         <Button
+            Color="Color.Primary"
             class="edit-item"
             @onclick="@(() => ShowUpdModal(applicant.Id))"
-            Style="max-width: 50px"
-        >
+            TextAlignment="TextAlignment.Center">
             UPD
         </Button>
         <Button
-            class="delete-item"
+            Color="Color.Danger"
+            class="edit-item"
             @onclick="@(() => DeleteApplicant(applicant.Id))"
-            Style="max-width: 50px"
-        >
+            Style="max-width: 60px"
+            TextAlignment="TextAlignment.Center">
             DEL
         </Button>
     </div>

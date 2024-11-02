@@ -6,17 +6,17 @@
 
 <h3>Exam Results</h3>
 
-<Button class="add-new-button" Clicked="@ShowAddModal">
+<Button class="add-new-button" Clicked="@ShowAddModal" Color="Color.Primary">
     Добавить результат за экзамен
 </Button>
 
 <div class="data-header">
     <div class="cell" style="max-width: 60px">Id</div>
     <div class="cell" style="max-width: 300px">Абитуриент</div>
-    <div class="cell">Экзамен</div>
-    <div class="cell">Результат</div>
-    <div style="width: 100%; max-width: 50px"></div>
-    <div style="width: 100%; max-width: 50px"></div>
+    <div class="cell" style="max-width: 300px">Экзамен</div>
+    <div class="cell" style="max-width: 300px">Результат</div>
+    <div style="width: 100%; max-width: 60px"></div>
+    <div style="width: 100%; max-width: 60px"></div>
 </div>
 <div class="data-container">
     @foreach (var examResult in _examResults)
@@ -25,15 +25,21 @@
             <div class="cell" style="max-width: 60px">@(examResult.Id + 1)</div>
             <div class="cell" style="max-width: 300px">@(GetApplicantName(examResult.ApplicantId))</div>
             <div class="cell" style="max-width: 300px">@(examResult.ExamName)</div>
-            <div class="cell">@examResult.Result</div>
-            <Button class="edit-item"
-                    @onclick="@(() => ShowUpdModal(examResult.Id))"
-                    Style="max-width: 50px">
+            <div class="cell" style="max-width: 300px">@examResult.Result</div>
+            <Button
+                Color="Color.Primary"
+                class="edit-item"
+                Style="max-width: 60px"
+                TextAlignment="TextAlignment.Center"
+                @onclick="@(() => ShowUpdModal(examResult.Id))">
                 UPD
             </Button>
-            <Button class="delete-item"
-                    @onclick="@(() => DeleteExamResult(examResult.Id))"
-                    Style="max-width: 50px">
+            <Button 
+                Color="Color.Danger"
+                class="delete-item"
+                @onclick="@(() => DeleteExamResult(examResult.Id))"
+                Style="max-width: 60px"
+                TextAlignment="TextAlignment.Center">
                 DEL
             </Button>
         </div>
