@@ -1,0 +1,42 @@
+﻿.task-container {
+    padding: 7px;
+    background-color: #8b96a2;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.button-container {
+    margin: 5px 0;
+}
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    background-color: #778492;
+    border-radius: 4px;
+    color: #414a53;
+    padding: 4px;
+}
+
+.result-cell {
+    display: flex;
+}
+
+.result-bigcell {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.result-text {
+    margin: 0 10px;
+}
+
+.result-label {
+    background-color: #6b7785;
+    border-radius: 4px;
+    padding: 5px;
+}

@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\Pages\Tasks.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Pages\Tasks.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazorise" Version="1.6.2" />
     <PackageReference Include="Blazorise.Bootstrap" Version="1.6.2" />
     <PackageReference Include="Blazorise.Bootstrap5" Version="1.6.2" />

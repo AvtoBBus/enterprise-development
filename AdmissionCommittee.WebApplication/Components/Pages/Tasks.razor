@@ -1,0 +1,368 @@
+﻿@page "/tasks"
+@inject IRepository<Applicant, int> applicantRepository;
+@inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
+@inject IRepository<ExamResult, int> examResultsRepository;
+@inject IRepository<Speciality, int> specialitiesRepository;
+
+<PageTitle>Tasks</PageTitle>
+
+<h1>Tasks</h1>
+
+<div class="task-container">
+    <h5>Вывести информацию об абитуриентах из определённого города</h5>
+    <label for="testCity">Введите город:</label>
+    <select id="testCity" @bind="testCity">
+        @foreach(var applicant in _applicants)
+        {
+            <option>@applicant.City</option>
+        }
+    </select>
+    <div class="button-container">
+        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(1))">
+            Получить результат
+        </Button>
+        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(1))">
+            Очистить
+        </Button>
+    </div>
+
+    @if(query1 != null)
+    {
+        <div class="result-container">
+            @foreach (var applicant in query1)
+            {
+                <p class="result-label" style="margin: 5px 0 auto 5px">Applicant:</p>
+                <div class="result-cell">
+                    <p class="result-text">@applicant.Id</p>
+                    <p class="result-text">@applicant.FullName</p>
+                    <p class="result-text">@applicant.BirthdayDate</p>
+                    <p class="result-text">@applicant.City</p>
+                    <p class="result-text">@applicant.Country</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div class="task-container">
+    <h5>Вывести информацию об абитуриентах старше определённого возраста (упорядчить по имени)</h5>
+    <label for="testYear">Введите возраст:</label>
+    <input type="number" id="testYear" @bind="testYear" />
+    <label for="testDateTime">Введите дату подсчёта:</label>
+    <input type="date" id="testDateTime" @bind="testDateTime" />
+    <div class="button-container">
+        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(2))">
+            Получить результат
+        </Button>
+        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(2))">
+            Очистить
+        </Button>
+    </div>
+
+    @if (query2 != null)
+    {
+        <div class="result-container">
+            @foreach (var applicant in query2)
+            {
+                <p class="result-label" style="margin: 5px 0 auto 5px">Applicant:</p>
+                <div class="result-cell">
+                    <p class="result-text">@applicant.Id</p>
+                    <p class="result-text">@applicant.FullName</p>
+                    <p class="result-text">@applicant.BirthdayDate</p>
+                    <p class="result-text">@applicant.City</p>
+                    <p class="result-text">@applicant.Country</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div class="task-container">
+    <h5>Вывести информацию об абитуриентах поступивших на указанную специальность (без учёта приоритета)</h5>
+    <label for="testSpecialitiesName">Введите специальность:</label>
+    <select id="testSpecialitiesName" @bind="testSpecialitiesName">
+        @foreach (var speciality in _specialities)
+        {
+            <option>@speciality.Name</option>
+        }
+    </select>
+    <div class="button-container">
+        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(3))">
+            Получить результат
+        </Button>
+        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(3))">
+            Очистить
+        </Button>
+    </div>
+
+    @if (query3 != null)
+    {
+        <div class="result-container">
+            @foreach (var applicant in query3)
+            {
+                <p class="result-label" style="margin: 5px 0 auto 5px">Applicant:</p>
+                <div class="result-cell">
+                    <p class="result-text">@applicant.Applicant.Id</p>
+                    <p class="result-text">@applicant.Applicant.FullName</p>
+                    <p class="result-text">@applicant.TotalScore</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div class="task-container">
+    <h5>Вывести информацию об количестве абитуриентов поступающих на каждую специальность по приоритету</h5>
+    <label for="testSpecialitiesName">Введите приоритет:</label>
+    <input type="number" min="0" max="5" @bind="testPriorityValue" />
+    <div class="button-container">
+        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(4))">
+            Получить результат
+        </Button>
+        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(4))">
+            Очистить
+        </Button>
+    </div>
+
+    @if (query4 != null)
+    {
+        <div class="result-container">
+            @foreach (var q in query4)
+            {
+                <div class="result-cell">
+                    <p class="result-label" style="margin: 5px 0 auto 5px">Count:</p>
+                    <p class="result-text" style="margin-top: 10px">@q.Count</p>
+                    <p class="result-label" style="margin: 5px 5px auto 5px">Directions:</p>
+                    <div class="result-bigcell">
+                        @foreach (var direction in q.Directions)
+                        {
+                            <div class="result-cell">
+                                <p class="result-text">@direction.Id</p>
+                                <p class="result-text">@GetApplicantName(@direction.ApplicantId)</p>
+                                <p class="result-text">@GetSpecialityName(@direction.SpecialityId)</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div class="task-container">
+    <h5>Вывести информацию о топ 5 абитуриентах набраших наибольшее количество баллов за 3 предмета</h5>
+    <div class="button-container">
+        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(5))">
+            Получить результат
+        </Button>
+        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(5))">
+            Очистить
+        </Button>
+    </div>
+
+    @if (query5 != null)
+    {
+        <div class="result-container">
+                @foreach (var q in query5)
+                {
+                    <div class="result-cell">
+                        <p class="result-label" style="margin: 5px 0 auto 5px">Applicant:</p>
+                        <p class="result-text" style="margin-top: 10px">@q.Applicant.FullName</p>
+                        <p class="result-label" style="margin: 5px 0 auto 5px">Score:</p>
+                        <p class="result-text" style="margin-top: 10px">@q.Score</p>
+                    </div>
+                }
+        </div>
+    }
+</div>
+<div class="task-container">
+    <h5>Вывести информацию об абитуриентах, которые набрали максимальный балл по каждому из предметов</h5>
+    <div class="button-container">
+        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(6))">
+            Получить результат
+        </Button>
+        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(6))">
+            Очистить
+        </Button>
+    </div>
+
+    @if (query6 != null)
+    {
+        <div class="result-container">
+            @foreach (var q in query6)
+            {
+                <div class="result-cell">
+                    <p class="result-label" style="margin: 5px 0 auto 5px">Applicant:</p>
+                    <p class="result-text" style="margin-top: 10px">@GetApplicantName(@q.ApplicantId)</p>
+                    <p class="result-label" style="margin: 5px 0 auto 5px">Speciality:</p>
+                    <p class="result-text" style="margin-top: 10px">@GetSpecialityName(@q.SpecialityId)</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<div style="width: 100%; height: 45px;"></div>
+@code {
+    private List<Applicant> _applicants = new();
+    private List<AdmissionCommittee.Domain.Models.Direction> _directions = new();
+    private List<ExamResult> _examResults = new();
+    private List<Speciality> _specialities = new();
+
+    private string testCity = "";
+    private int testYear = 0;
+    private DateTime testDateTime;
+    private string testSpecialitiesName = "";
+    private int testPriorityValue = 0;
+
+    private List<Applicant> query1 = null!;
+    private List<Applicant> query2 = null!;
+    private List<ApplicantTotalScoreDto> query3 = null!;
+    private List<DirectionsGroupWithCountDto> query4 = null!;
+    private List<ApplicantWithScoreDto> query5 = null!;
+    private List<ApplicantWithSpecialityDto> query6 = null!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _applicants = await applicantRepository.GetAll();
+        _directions = await directionRepository.GetAll();
+        _examResults = await examResultsRepository.GetAll();
+        _specialities = await specialitiesRepository.GetAll();
+    }
+
+    private void ClickHandler(int taskId)
+    {
+        switch (taskId)
+        {
+            case 1:
+                query1 = _applicants.Where(a => a.City == testCity)
+                            .ToList();
+                break;
+            case 2:
+                query2 = _applicants.Where(a => a.BirthdayDate.AddYears(testYear) < testDateTime)
+                            .OrderBy(a => a.FullName)
+                            .ToList();
+                break;
+            case 3:
+                query3 = (from specialities in _specialities
+                          where specialities.Name == testSpecialitiesName
+                          join directions in _directions on specialities.Id equals directions.SpecialityId
+                          join applicants in _applicants on directions.ApplicantId equals applicants.Id
+                          select new ApplicantTotalScoreDto
+                             {
+                                 Applicant = applicants,
+                                 TotalScore = _examResults
+                                         .Where(examResult => examResult.ApplicantId == applicants.Id)
+                                         .Sum(examResult => examResult.Result)
+                             })
+                                .OrderByDescending(x => x.TotalScore)
+                                .Distinct()
+                                .ToList();
+
+                break;
+            case 4:
+                query4 = (from direction in _directions
+                          where direction.Priority == testPriorityValue
+                          group direction by direction.SpecialityId into g
+                          select new DirectionsGroupWithCountDto
+                            {
+                                Directions = g.ToList(),
+                                Count = g.Count()
+                            }).ToList();
+                break;
+            case 5:
+                query5 = _applicants
+                        .Select(applicant => new ApplicantWithScoreDto
+                        {
+                            Applicant = applicant,
+                            Score = _examResults
+                            .Where(examRes => examRes.ApplicantId == applicant.Id)
+                            .Sum(examRes => examRes.Result)
+                        }).OrderByDescending(a => a.Score)
+                        .Take(5)
+                        .ToList();
+                break;
+            case 6:
+                var maxScoreByExam = _examResults
+                   .GroupBy(examRes => examRes.ExamName)
+                   .Select(Group => new
+                   {
+                       ExamName = Group.Key,
+                       MaxScore = Group.Max(examRes => examRes.Result)
+                   });
+
+                query6 = maxScoreByExam
+                        .Join(
+                            _examResults,
+                            maxScore => maxScore.MaxScore,
+                            examRes => examRes.Result,
+                            (maxScore, examRes) => new
+                            {
+                                MaxScore = maxScore,
+                                ExamRes = examRes
+                            }
+                        )
+                        .Where(joined => joined.MaxScore.ExamName == joined.ExamRes.ExamName)
+                        .Join(
+                            _applicants,
+                            maxScore => maxScore.ExamRes.ApplicantId,
+                            applicant => applicant.Id,
+                            (maxScore, applicant) => new
+                            {
+                                MaxScore = maxScore,
+                                Applicant = applicant
+                            }
+                        )
+                        .Join(
+                            _directions,
+                            maxScore => maxScore.Applicant.Id,
+                            direction => direction.ApplicantId,
+                            (maxScore, direction) => new
+                            {
+                                maxScore.Applicant,
+                                direction.SpecialityId,
+                                maxScore.MaxScore.ExamRes.ExamName,
+                                MaxScore = maxScore.MaxScore.ExamRes.Result,
+                                direction.Priority
+                            }
+                        )
+                        .Where(speciality => speciality.Priority == 1)
+                        .Select(speciality => speciality)
+                        .ToList()
+                        .Select(q => new ApplicantWithSpecialityDto
+                        {
+                                ApplicantId = q.Applicant.Id,
+                                SpecialityId = q.SpecialityId
+                        }).ToList();
+                break;
+        }
+
+    }
+
+    private void ClearTask(int taskId)
+    {
+        switch (taskId)
+        {
+            case 1:
+                query1 = null!;
+                break;
+            case 2:
+                query2 = null!;
+                break;
+            case 3:
+                query3 = null!;
+                break;
+            case 4:
+                query4 = null!;
+                break;
+            case 5:
+                query5 = null!;
+                break;
+            case 6:
+                query6 = null!;
+                break;
+        }
+    }
+
+    private string GetApplicantName(int applicantId) => _applicants?.FirstOrDefault(a => a.Id == applicantId)?.FullName!;
+
+    private string GetSpecialityName(int specialityId) => _specialities?.FirstOrDefault(s => s.Id == specialityId)?.Name!;
+
+}

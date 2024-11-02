@@ -20,7 +20,7 @@
     <div style="width: 100%; max-width: 60px"></div>
 </div>
 <div class="data-container">
-    @foreach (var direction in _directinions)
+    @foreach (var direction in _directions)
     {
         <div class="data-row">
             <div class="cell" style="max-width: 60px">@(direction.Id + 1)</div>
@@ -93,7 +93,7 @@
 
 @code {
     private List<Applicant> _applicants = new();
-    private List<AdmissionCommittee.Domain.Models.Direction> _directinions = new();
+    private List<AdmissionCommittee.Domain.Models.Direction> _directions = new();
     private List<Speciality> _specialyties = new();
     private Modal? modalRef = null!;
     private AdmissionCommittee.Domain.Models.Direction newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0};
@@ -103,28 +103,28 @@
     protected override async Task OnInitializedAsync()
     {
         _applicants = await applicantRepository.GetAll();
-        _directinions = await directionRepository.GetAll();
+        _directions = await directionRepository.GetAll();
         _specialyties = await specialitiesRepository.GetAll();
     }
 
     private async Task AddNewDirection()
     {
         await directionRepository.Add(newDirection);
-        _directinions = await directionRepository.GetAll();
+        _directions = await directionRepository.GetAll();
         await modalRef!.Hide();
     }
 
     private async Task DeleteDirection(int directionId)
     {
         await directionRepository.Delete(directionId);
-        _directinions = await directionRepository.GetAll();
+        _directions = await directionRepository.GetAll();
     }
 
     private async Task UpdateDirection()
     {
         await directionRepository.Update(newDirection, newDirection.Id);
         newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0 };
-        _directinions = await directionRepository.GetAll();
+        _directions = await directionRepository.GetAll();
         await modalRef!.Hide();
     }
 
