@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using System.Globalization;
 @inject IRepository<Applicant, int> applicantRepository;
+@inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
 
 <PageTitle>Applicants</PageTitle>
 
@@ -70,7 +71,7 @@
             </div>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary" Clicked="@(forAdd ? AddNewApplcant : UpdateAppllicant)">
+            <Button Color="Color.Primary" Clicked="@(forAdd ? AddNewApplicant : UpdateAppllicant)">
                 @(forAdd ? "Добавить" : "Изменить")
             </Button>
             <Button Color="Color.Secondary" Clicked="@CancelHandler">
@@ -93,7 +94,7 @@
         _applicants = await applicantRepository.GetAll();
     }
 
-    private async Task AddNewApplcant()
+    private async Task AddNewApplicant()
     {
         await applicantRepository.Add(newApplicant);
         _applicants = await applicantRepository.GetAll();
@@ -104,6 +105,13 @@
     {
         await applicantRepository.Delete(applicantId);
         _applicants = await applicantRepository.GetAll();
+
+        var directions = await directionRepository.GetAll();
+        directions = directions.Select(d => d).Where(d => d.ApplicantId == applicantId).ToList();
+        foreach (var d in directions)
+        {
+            await directionRepository.Delete(d.Id);
+        }
     }
 
     private async Task UpdateAppllicant()

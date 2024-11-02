@@ -1,9 +1,147 @@
 ﻿@page "/directions"
+@inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
+@inject IRepository<Applicant, int> applicantRepository;
+@inject IRepository<Speciality, int> specialitiesRepository;
 
 <PageTitle>Directions</PageTitle>
 
 <h1>Directions</h1>
 
-@code {
+<Button class="add-new-button" Clicked="@ShowAddModal">
+    Добавить заявку
+</Button>
 
+<div class="data-header">
+    <div class="cell" style="max-width: 60px">Id</div>
+    <div class="cell" style="max-width: 300px">Абитуриент</div>
+    <div class="cell">Специальность</div>
+    <div class="cell">Приоритет</div>
+    <div style="width: 100%; max-width: 50px"></div>
+    <div style="width: 100%; max-width: 50px"></div>
+</div>
+<div class="data-container">
+    @foreach (var direction in _directinions)
+    {
+        <div class="data-row">
+            <div class="cell" style="max-width: 60px">@(direction.Id + 1)</div>
+            <div class="cell" style="max-width: 300px">@(GetApplicantName(direction.ApplicantId))</div>
+            <div class="cell">@(GetSpecialityName(direction.SpecialityId))</div>
+            <div class="cell">@direction.Priority</div>
+            <Button class="edit-item"
+                    @onclick="@(() => ShowUpdModal(direction.Id))"
+                    Style="max-width: 50px">
+                UPD
+            </Button>
+            <Button class="delete-item"
+                    @onclick="@(() => DeleteDirection(direction.Id))"
+                    Style="max-width: 50px">
+                DEL
+            </Button>
+        </div>
+    }
+</div>
+
+<Modal @ref="modalRef" @bind-Visible="@modalVisible" style='@(modalVisible ? "display:block" : "display:none")'>
+    <ModalContent Centered>
+        <ModalHeader>
+            <h5>Добавить заявку</h5>
+        </ModalHeader>
+         <ModalBody>
+            <div class="mb-3">
+                <label for="fullName">Абитуриент:</label>
+                <select @bind="newDirection.ApplicantId">
+                    @foreach(var applicant in _applicants)
+                    {
+                        <option>@applicant.Id</option>
+                    }
+                </select>
+                <p>@GetApplicantName(newDirection.ApplicantId)</p>
+            </div>
+
+            <div class="mb-3">
+                <label for="fullName">Специальность:</label>
+                <select @bind="newDirection.SpecialityId">
+                    @foreach (var speciality in _specialyties)
+                    {
+                        <option>@speciality.Id</option>
+                    }
+                </select>
+                <p>@GetSpecialityName(newDirection.SpecialityId)</p>
+            </div>
+             <div class="mb-3">
+                <label for="birthdayDate">Приоритет:</label>
+                <input type="number" min="1" max="5" id="birthdayDate" @bind="newDirection.Priority" class="form-control" />
+            </div>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@(forAdd ? AddNewDirection : UpdateDirection)">
+                @(forAdd ? "Добавить" : "Изменить")
+            </Button>
+            <Button Color="Color.Secondary" Clicked="@CancelHandler">
+                Отмена
+            </Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+@code {
+    private List<Applicant> _applicants = new();
+    private List<AdmissionCommittee.Domain.Models.Direction> _directinions = new();
+    private List<Speciality> _specialyties = new();
+    private Modal? modalRef = null!;
+    private AdmissionCommittee.Domain.Models.Direction newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0};
+    private bool modalVisible;
+    private bool forAdd = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _applicants = await applicantRepository.GetAll();
+        _directinions = await directionRepository.GetAll();
+        _specialyties = await specialitiesRepository.GetAll();
+    }
+
+    private async Task AddNewDirection()
+    {
+        await directionRepository.Add(newDirection);
+        _directinions = await directionRepository.GetAll();
+        await modalRef!.Hide();
+    }
+
+    private async Task DeleteDirection(int applicantId)
+    {
+        await directionRepository.Delete(applicantId);
+        _directinions = await directionRepository.GetAll();
+    }
+
+    private async Task UpdateDirection()
+    {
+        await directionRepository.Update(newDirection, newDirection.Id);
+        newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0 };
+        await directionRepository.GetAll();
+        await modalRef!.Hide();
+    }
+
+    private async Task ShowUpdModal(int applicantId)
+    {
+        forAdd = false;
+        newDirection = await directionRepository.GetById(applicantId);
+        await modalRef!.Show();
+    }
+
+    private async Task ShowAddModal()
+    {
+        forAdd = true;
+        newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0 };
+        await modalRef!.Show();
+    }
+
+    private async Task CancelHandler()
+    {
+        await modalRef!.Hide();
+    }
+
+    private string GetApplicantName(int applicantId) => _applicants?.FirstOrDefault(a => a.Id == applicantId)?.FullName!;
+
+    private string GetSpecialityName(int specialityId) => _specialyties?.FirstOrDefault(s => s.Id == specialityId)?.Name!;
 }
