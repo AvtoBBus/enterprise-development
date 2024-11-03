@@ -3,6 +3,7 @@
 @inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
 @inject IRepository<ExamResult, int> examResultsRepository;
 @inject IRepository<Speciality, int> specialitiesRepository;
+@using System.Globalization;
 
 <PageTitle>Tasks</PageTitle>
 
@@ -18,10 +19,10 @@
         }
     </select>
     <div class="button-container">
-        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(1))">
+        <Button class="get-task-result" Color="Blazorise.Color.Primary" Clicked="@(() => ClickHandler(1))">
             Получить результат
         </Button>
-        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(1))">
+        <Button class="clear-task-result" Color="Blazorise.Color.Danger" Clicked="@(() => ClearTask(1))">
             Очистить
         </Button>
     </div>
@@ -50,10 +51,10 @@
     <label for="testDateTime">Введите дату подсчёта:</label>
     <input type="date" id="testDateTime" @bind="testDateTime" />
     <div class="button-container">
-        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(2))">
+        <Button class="get-task-result" Color="Blazorise.Color.Primary" Clicked="@(() => ClickHandler(2))">
             Получить результат
         </Button>
-        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(2))">
+        <Button class="clear-task-result" Color="Blazorise.Color.Danger" Clicked="@(() => ClearTask(2))">
             Очистить
         </Button>
     </div>
@@ -85,10 +86,10 @@
         }
     </select>
     <div class="button-container">
-        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(3))">
+        <Button class="get-task-result" Color="Blazorise.Color.Primary" Clicked="@(() => ClickHandler(3))">
             Получить результат
         </Button>
-        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(3))">
+        <Button class="clear-task-result" Color="Blazorise.Color.Danger" Clicked="@(() => ClearTask(3))">
             Очистить
         </Button>
     </div>
@@ -113,10 +114,10 @@
     <label for="testSpecialitiesName">Введите приоритет:</label>
     <input type="number" min="0" max="5" @bind="testPriorityValue" />
     <div class="button-container">
-        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(4))">
+        <Button class="get-task-result" Color="Blazorise.Color.Primary" Clicked="@(() => ClickHandler(4))">
             Получить результат
         </Button>
-        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(4))">
+        <Button class="clear-task-result" Color="Blazorise.Color.Danger" Clicked="@(() => ClearTask(4))">
             Очистить
         </Button>
     </div>
@@ -148,10 +149,10 @@
 <div class="task-container">
     <h5>Вывести информацию о топ 5 абитуриентах набраших наибольшее количество баллов за 3 предмета</h5>
     <div class="button-container">
-        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(5))">
+        <Button class="get-task-result" Color="Blazorise.Color.Primary" Clicked="@(() => ClickHandler(5))">
             Получить результат
         </Button>
-        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(5))">
+        <Button class="clear-task-result" Color="Blazorise.Color.Danger" Clicked="@(() => ClearTask(5))">
             Очистить
         </Button>
     </div>
@@ -174,10 +175,10 @@
 <div class="task-container">
     <h5>Вывести информацию об абитуриентах, которые набрали максимальный балл по каждому из предметов</h5>
     <div class="button-container">
-        <Button class="get-task-result" Color="Color.Primary" Clicked="@(() => ClickHandler(6))">
+        <Button class="get-task-result" Color="Blazorise.Color.Primary" Clicked="@(() => ClickHandler(6))">
             Получить результат
         </Button>
-        <Button class="clear-task-result" Color="Color.Danger" Clicked="@(() => ClearTask(6))">
+        <Button class="clear-task-result" Color="Blazorise.Color.Danger" Clicked="@(() => ClearTask(6))">
             Очистить
         </Button>
     </div>
@@ -207,7 +208,7 @@
 
     private string testCity = "";
     private int testYear = 0;
-    private DateTime testDateTime;
+    private DateTime testDateTime = DateTime.ParseExact("01.01.1990", "dd.MM.yyyy", CultureInfo.InvariantCulture);
     private string testSpecialitiesName = "";
     private int testPriorityValue = 0;
 

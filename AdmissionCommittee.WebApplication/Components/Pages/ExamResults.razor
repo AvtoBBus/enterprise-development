@@ -4,10 +4,11 @@
 
 <PageTitle>Exam Results</PageTitle>
 
-<h3>Exam Results</h3>
+<h1>Exam Results</h1>
 
-<Button class="add-new-button" Clicked="@ShowAddModal" Color="Color.Primary">
+<Button class="add-new-button" Clicked="@ShowAddModal" Color="Blazorise.Color.Primary">
     Добавить результат за экзамен
+    <MudIcon Icon="@Icons.Material.Filled.Add" Color="MudBlazor.Color.Primary" />
 </Button>
 
 <div class="data-header">
@@ -26,16 +27,14 @@
             <div class="cell" style="max-width: 300px">@(GetApplicantName(examResult.ApplicantId))</div>
             <div class="cell" style="max-width: 300px">@(examResult.ExamName)</div>
             <div class="cell" style="max-width: 300px">@examResult.Result</div>
-            <Button
-                Color="Color.Primary"
+            <Button Color="Blazorise.Color.Primary"
                 class="edit-item"
                 Style="max-width: 60px"
                 TextAlignment="TextAlignment.Center"
                 @onclick="@(() => ShowUpdModal(examResult.Id))">
                 UPD
             </Button>
-            <Button 
-                Color="Color.Danger"
+            <Button Color="Blazorise.Color.Danger"
                 class="delete-item"
                 @onclick="@(() => DeleteExamResult(examResult.Id))"
                 Style="max-width: 60px"
@@ -46,7 +45,7 @@
     }
 </div>
 
-<Modal @ref="modalRef" @bind-Visible="@modalVisible" style='@(modalVisible ? "display:block" : "display:none")'>
+<Modal @ref="modalRef">
     <ModalContent Centered>
         <ModalHeader>
             <h5>Добавить результат</h5>
@@ -73,10 +72,10 @@
             </div>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary" Clicked="@(forAdd ? AddNewExamResult : UpdateExamResult)">
+            <Button Color="Blazorise.Color.Primary" Clicked="@(forAdd ? AddNewExamResult : UpdateExamResult)">
                 @(forAdd ? "Добавить" : "Изменить")
             </Button>
-            <Button Color="Color.Secondary" Clicked="@CancelHandler">
+            <Button Color="Blazorise.Color.Secondary" Clicked="@CancelHandler">
                 Отмена
             </Button>
         </ModalFooter>
@@ -88,7 +87,6 @@
     private List<ExamResult> _examResults = new();
     private Modal? modalRef = null!;
     private ExamResult newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
-    private bool modalVisible;
     private bool forAdd = true;
 
     protected override async Task OnInitializedAsync()

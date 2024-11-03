@@ -3,10 +3,11 @@
 
 <PageTitle>Specialities</PageTitle>
 
-<h3>Specialities</h3>
+<h1>Specialities</h1>
 
-<Button class="add-new-button" Clicked="@ShowAddModal" Color="Color.Primary">
+<Button class="add-new-button" Clicked="@ShowAddModal" Color="Blazorise.Color.Primary">
     Добавить специальность
+    <MudIcon Icon="@Icons.Material.Filled.Add" Color="MudBlazor.Color.Primary" />
 </Button>
 
 <div class="data-header">
@@ -25,16 +26,14 @@
             <div class="cell" style="max-width: 300px">@(speciality.Number)</div>
             <div class="cell" style="max-width: 300px">@(speciality.Name)</div>
             <div class="cell" style="max-width: 300px">@(speciality.Faculity)</div>
-            <Button 
-                Color="Color.Primary"
+            <Button Color="Blazorise.Color.Primary"
                 class="edit-item"
                 Style="max-width: 60px"
                 TextAlignment="TextAlignment.Center"
                 @onclick="@(() => ShowUpdModal(speciality.Id))">
                 UPD
             </Button>
-            <Button 
-                Color="Color.Danger"
+            <Button Color="Blazorise.Color.Danger"
                 class="delete-item"
                 @onclick="@(() => DeleteSpeciality(speciality.Id))"
                 Style="max-width: 60px"
@@ -45,7 +44,7 @@
     }
 </div>
 
-<Modal @ref="modalRef" @bind-Visible="@modalVisible" style='@(modalVisible ? "display:block" : "display:none")'>
+<Modal @ref="modalRef">
     <ModalContent Centered>
         <ModalHeader>
             <h5>Добавить специальность</h5>
@@ -65,10 +64,10 @@
             </div>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Primary" Clicked="@(forAdd ? AddNewSpeciality : UpdateSpeciality)">
+            <Button Color="Blazorise.Color.Primary" Clicked="@(forAdd ? AddNewSpeciality : UpdateSpeciality)">
                 @(forAdd ? "Добавить" : "Изменить")
             </Button>
-            <Button Color="Color.Secondary" Clicked="@CancelHandler">
+            <Button Color="Blazorise.Color.Secondary" Clicked="@CancelHandler">
                 Отмена
             </Button>
         </ModalFooter>
@@ -79,7 +78,6 @@
     private List<Speciality> _specialities = new();
     private Modal? modalRef = null!;
     private Speciality newSpeciality = new() { Id = 0, Name = "", Number = "", Faculity = "" };
-    private bool modalVisible;
     private bool forAdd = true;
 
     protected override async Task OnInitializedAsync()

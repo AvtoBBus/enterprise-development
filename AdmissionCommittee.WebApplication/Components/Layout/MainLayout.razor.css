@@ -119,3 +119,7 @@ main {
     border: 1px solid #04173d;
     border-radius: 4px;
 }
+
+::deep .modal.show {
+    display: block;
+}

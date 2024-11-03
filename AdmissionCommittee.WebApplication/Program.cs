@@ -7,6 +7,7 @@ using AdmissionCommittee.Domain.Repositories;
 using AdmissionCommittee.WebApplication.Components;
 using AdmissionCommittee.Domain;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ builder.Services.AddTransient<IRepository<ExamResult, int>, ExamResultRepository
 builder.Services.AddTransient<IRepository<Speciality, int>, SpecialityRepository>();
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddMudServices();
 
 builder.Services
     .AddBlazorise(options =>
