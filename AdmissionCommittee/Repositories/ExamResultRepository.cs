@@ -47,7 +47,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
 
         if (item != null)
         {
-            item.ApplicantId = id;
+            item.ApplicantId = newItem.ApplicantId;
             item.Result = newItem.Result;
             item.ExamName = newItem.ExamName;
             context.ExamResults.Update(item);
