@@ -19,10 +19,9 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     [HttpGet]
     public ActionResult<IEnumerable<Applicant>> Get()
     {
-        var applicationDto = repository.GetAll();
+        var applicant = repository.GetAll();
 
-        if (applicationDto == null) return NotFound();
-        return Ok(applicationDto);
+        return Ok(applicant);
     }
 
     /// <summary>

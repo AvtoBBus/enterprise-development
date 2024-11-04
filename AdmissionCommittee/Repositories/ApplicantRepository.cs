@@ -34,9 +34,7 @@ public class ApplicantRepository : IRepository<Applicant, int>
     /// <param name="newItem"><see cref="Applicant"/> item</param>
     public void Add(Applicant newItem)
     {
-        _applicantsCount++;
-        var newId = _applicantsCount;
-        newItem.Id = newId;
+        newItem.Id = ++_applicantsCount;
         _applicants.Add(newItem);
     }
 

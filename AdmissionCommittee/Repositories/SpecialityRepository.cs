@@ -33,9 +33,7 @@ public class SpecialityRepository : IRepository<Speciality, int>
     /// <param name="newItem"><see cref="Speciality"/> item</param>
     public void Add(Speciality newItem)
     {
-        _specialytiesCount++;
-        var newId = _specialytiesCount;
-        newItem.Id = newId;
+        newItem.Id = ++_specialytiesCount;
         _specialyties.Add(newItem);
     }
 

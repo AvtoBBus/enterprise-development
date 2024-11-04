@@ -22,7 +22,6 @@ namespace AdmissionCommittee.Server.Controllers
         {
             var direction = repository.GetAll();
 
-            if (direction == null) return NotFound();
             return Ok(direction);
         }
 

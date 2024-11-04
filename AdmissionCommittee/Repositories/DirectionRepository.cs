@@ -32,9 +32,7 @@ public class DirectionRepository : IRepository<Direction, int>
     /// <param name="newItem"><see cref="Direction"/> item</param>
     public void Add(Direction newItem)
     {
-        _directionCount++;
-        var newId = _directionCount;
-        newItem.Id = newId;
+        newItem.Id = ++_directionCount;
         _directions.Add(newItem);
     }
 

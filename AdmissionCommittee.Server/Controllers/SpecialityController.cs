@@ -20,10 +20,9 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Speciality>> Get()
         {
-            var direction = repository.GetAll();
+            var specialities = repository.GetAll();
 
-            if (direction == null) return NotFound();
-            return Ok(direction);
+            return Ok(specialities);
         }
 
         /// <summary>
@@ -36,12 +35,12 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpGet("{id}")]
         public ActionResult<Speciality> Get(int id)
         {
-            var direction = repository.GetById(id);
+            var speciality = repository.GetById(id);
 
-            if (direction == null)
+            if (speciality == null)
                 return NotFound();
 
-            return Ok(direction);
+            return Ok(speciality);
         }
 
         /// <summary>

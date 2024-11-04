@@ -33,9 +33,7 @@ public class ExamResultRepository : IRepository<ExamResult, int>
     /// <param name="newItem"><see cref="ExamResult"/> item</param>
     public void Add(ExamResult newItem)
     {
-        _examResultCount++;
-        var newId = _examResultCount;
-        newItem.Id = newId;
+        newItem.Id = ++_examResultCount;
         _examResults.Add(newItem);
     }
 

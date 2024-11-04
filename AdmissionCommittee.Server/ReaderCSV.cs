@@ -17,7 +17,7 @@ namespace AdmissionCommittee.Server
                 var rows = textFieldParser.ReadFields();
                 if (rows != null)
                 {
-                    Applicant applicant = new Applicant
+                    var applicant = new Applicant
                     {
                         Id = int.Parse(rows[0]),
                         BirthdayDate = DateTime.ParseExact(rows[1], "dd.MM.yyyy", CultureInfo.InvariantCulture),
@@ -43,7 +43,7 @@ namespace AdmissionCommittee.Server
                 var rows = textFieldParser.ReadFields();
                 if (rows != null)
                 {
-                    Direction direction = new Direction
+                    var direction = new Direction
                     {
                         Id = int.Parse(rows[0]),
                         ApplicantId = int.Parse(rows[1]),
@@ -68,14 +68,14 @@ namespace AdmissionCommittee.Server
                 var rows = textFieldParser.ReadFields();
                 if (rows != null)
                 {
-                    ExamResult eResult = new ExamResult
+                    var examResult = new ExamResult
                     {
                         Id = int.Parse(rows[0]),
                         ApplicantId = int.Parse(rows[1]),
                         ExamName = rows[2],
                         Result = int.Parse(rows[3]),
                     };
-                    examResults.Add(eResult);
+                    examResults.Add(examResult);
                 }
             }
 
@@ -93,7 +93,7 @@ namespace AdmissionCommittee.Server
                 var rows = textFieldParser.ReadFields();
                 if (rows != null)
                 {
-                    Speciality speciality = new Speciality
+                    var speciality = new Speciality
                     {
                         Id = int.Parse(rows[0]),
                         Number = rows[1],
