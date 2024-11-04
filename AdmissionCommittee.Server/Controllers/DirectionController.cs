@@ -20,9 +20,7 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Direction>> Get()
         {
-            var direction = repository.GetAll();
-
-            return Ok(direction);
+            return Ok(repository.GetAll());
         }
 
         /// <summary>

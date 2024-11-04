@@ -20,9 +20,7 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Speciality>> Get()
         {
-            var specialities = repository.GetAll();
-
-            return Ok(specialities);
+            return Ok(repository.GetAll());
         }
 
         /// <summary>

@@ -20,9 +20,7 @@ namespace AdmissionCommittee.Server.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ExamResult>> Get()
         {
-            var examResults = repository.GetAll();
-
-            return Ok(examResults);
+            return Ok(repository.GetAll());
         }
 
         /// <summary>
