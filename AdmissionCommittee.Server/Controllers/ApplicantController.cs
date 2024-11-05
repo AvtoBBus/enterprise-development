@@ -17,12 +17,9 @@ public class ApplicantController(IRepository<Applicant, int> repository, IMapper
     /// <response code="200">Success</response>
     /// <response code="404">Not Found</response>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Applicant>>> Get()
+    public ActionResult<IEnumerable<Applicant>> Get()
     {
-        var applicationDto = await repository.GetAll();
-
-        if (applicationDto == null) return NotFound();
-        return Ok(applicationDto);
+        return Ok(repository.GetAll());
     }
 
     /// <summary>

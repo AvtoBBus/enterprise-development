@@ -10,13 +10,14 @@ namespace AdmissionCommittee.Server
         {
             var applicants = new List<Applicant>();
             using var textFieldParser = new TextFieldParser(fileName);
+            textFieldParser.TextFieldType = FieldType.Delimited;
+            textFieldParser.SetDelimiters(";");
+            while (!textFieldParser.EndOfData)
             {
-                textFieldParser.TextFieldType = FieldType.Delimited;
-                textFieldParser.SetDelimiters(";");
-                while (!textFieldParser.EndOfData)
+                var rows = textFieldParser.ReadFields();
+                if (rows != null)
                 {
-                    var rows = textFieldParser.ReadFields();
-                    Applicant applicant = new Applicant
+                    var applicant = new Applicant
                     {
                         Id = int.Parse(rows[0]),
                         BirthdayDate = DateTime.ParseExact(rows[1], "dd.MM.yyyy", CultureInfo.InvariantCulture),
@@ -35,13 +36,14 @@ namespace AdmissionCommittee.Server
         {
             var directions = new List<Direction>();
             using var textFieldParser = new TextFieldParser(fileName);
+            textFieldParser.TextFieldType = FieldType.Delimited;
+            textFieldParser.SetDelimiters(";");
+            while (!textFieldParser.EndOfData)
             {
-                textFieldParser.TextFieldType = FieldType.Delimited;
-                textFieldParser.SetDelimiters(";");
-                while (!textFieldParser.EndOfData)
+                var rows = textFieldParser.ReadFields();
+                if (rows != null)
                 {
-                    var rows = textFieldParser.ReadFields();
-                    Direction direction = new Direction
+                    var direction = new Direction
                     {
                         Id = int.Parse(rows[0]),
                         ApplicantId = int.Parse(rows[1]),
@@ -59,20 +61,21 @@ namespace AdmissionCommittee.Server
         {
             var examResults = new List<ExamResult>();
             using var textFieldParser = new TextFieldParser(fileName);
+            textFieldParser.TextFieldType = FieldType.Delimited;
+            textFieldParser.SetDelimiters(";");
+            while (!textFieldParser.EndOfData)
             {
-                textFieldParser.TextFieldType = FieldType.Delimited;
-                textFieldParser.SetDelimiters(";");
-                while (!textFieldParser.EndOfData)
+                var rows = textFieldParser.ReadFields();
+                if (rows != null)
                 {
-                    var rows = textFieldParser.ReadFields();
-                    ExamResult eResult = new ExamResult
+                    var examResult = new ExamResult
                     {
                         Id = int.Parse(rows[0]),
                         ApplicantId = int.Parse(rows[1]),
                         ExamName = rows[2],
                         Result = int.Parse(rows[3]),
                     };
-                    examResults.Add(eResult);
+                    examResults.Add(examResult);
                 }
             }
 
@@ -83,13 +86,14 @@ namespace AdmissionCommittee.Server
         {
             var specialities = new List<Speciality>();
             using var textFieldParser = new TextFieldParser(fileName);
+            textFieldParser.TextFieldType = FieldType.Delimited;
+            textFieldParser.SetDelimiters(";");
+            while (!textFieldParser.EndOfData)
             {
-                textFieldParser.TextFieldType = FieldType.Delimited;
-                textFieldParser.SetDelimiters(";");
-                while (!textFieldParser.EndOfData)
+                var rows = textFieldParser.ReadFields();
+                if (rows != null)
                 {
-                    var rows = textFieldParser.ReadFields();
-                    Speciality speciality = new Speciality
+                    var speciality = new Speciality
                     {
                         Id = int.Parse(rows[0]),
                         Number = rows[1],
@@ -98,6 +102,7 @@ namespace AdmissionCommittee.Server
                     };
                     specialities.Add(speciality);
                 }
+
             }
 
             return specialities;
