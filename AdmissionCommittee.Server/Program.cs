@@ -8,7 +8,6 @@ using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
 
 var connectionString = builder.Configuration["ConnectionStrings:postrges"];
 
