@@ -22,7 +22,7 @@ public class ExamResultRepository(AdmissionCommitteeDbContext context) : IReposi
     /// <returns>Return <see cref="ExamResult"/> object if can find, else return null</returns>
     public async Task<ExamResult> GetById(int id)
     {
-        return await context.ExamResults.FindAsync(id);
+        return await (ValueTask<ExamResult>)context.ExamResults.FindAsync(id)!;
     }
 
     /// <summary>

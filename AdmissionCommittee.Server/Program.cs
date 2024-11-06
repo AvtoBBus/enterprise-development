@@ -9,7 +9,7 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration["ConnectionStrings:postrges"];
+var connectionString = builder.Configuration.GetConnectionString("mySql");
 
 builder.Services.AddDbContext<AdmissionCommitteeDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));

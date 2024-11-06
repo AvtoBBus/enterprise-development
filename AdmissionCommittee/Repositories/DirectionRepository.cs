@@ -22,7 +22,7 @@ public class DirectionRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <returns>Return <see cref="Direction"/> object if can find, else return null</returns>
     public async Task<Direction> GetById(int id)
     {
-        return await context.Directions.FindAsync(id);
+        return await (ValueTask<Direction>)context.Directions.FindAsync(id)!;
     }
 
     /// <summary>

@@ -18,9 +18,9 @@ namespace AdmissionCommittee.Server.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Not Found</response>
         [HttpGet]
-        public ActionResult<IEnumerable<Speciality>> Get()
+        public async Task<ActionResult<IEnumerable<Speciality>>> Get()
         {
-            return Ok(repository.GetAll());
+            return Ok(await repository.GetAll());
         }
 
 

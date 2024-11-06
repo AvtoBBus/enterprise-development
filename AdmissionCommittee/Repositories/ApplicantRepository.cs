@@ -22,7 +22,7 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
     /// <returns>Return <see cref="Applicant"/> object if can find, else return null</returns>
     public async Task<Applicant> GetById(int id)
     {
-        return await context.Applicants.FindAsync(id);
+        return await (ValueTask<Applicant>)context.Applicants.FindAsync(id)!;
     }
 
     /// <summary>
