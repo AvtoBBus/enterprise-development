@@ -13,7 +13,7 @@ public interface IRepository<TEntity, TKey>
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns></returns>
-    public Task<TEntity> GetById(TKey id);
+    public Task<TEntity?> GetById(TKey id);
 
     /// <summary>
     /// Add new item

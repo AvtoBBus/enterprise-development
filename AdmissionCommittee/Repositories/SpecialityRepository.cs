@@ -20,7 +20,7 @@ public class SpecialityRepository(AdmissionCommitteeDbContext context) : IReposi
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>Return <see cref="Speciality"/> object if can find, else return null</returns>
-    public async Task<Speciality> GetById(int id)
+    public async Task<Speciality?> GetById(int id)
     {
         return await context.Specialities.FindAsync(id);
     }

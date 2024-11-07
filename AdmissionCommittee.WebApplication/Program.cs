@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var connectionString = builder.Configuration["ConnectionStrings:postrges"];
+var connectionString = builder.Configuration.GetConnectionString("MySql");
 
 builder.Services.AddDbContext<AdmissionCommitteeDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
