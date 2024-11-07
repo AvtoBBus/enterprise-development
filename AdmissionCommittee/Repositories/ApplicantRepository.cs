@@ -20,9 +20,9 @@ public class ApplicantRepository(AdmissionCommitteeDbContext context) : IReposit
     /// </summary>
     /// <param name="id">Id of item</param>
     /// <returns>Return <see cref="Applicant"/> object if can find, else return null</returns>
-    public async Task<Applicant> GetById(int id)
+    public async Task<Applicant?> GetById(int id)
     {
-        return await (ValueTask<Applicant>)context.Applicants.FindAsync(id)!;
+        return await context.Applicants.FindAsync(id);
     }
 
     /// <summary>
