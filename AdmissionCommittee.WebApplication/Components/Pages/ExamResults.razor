@@ -15,8 +15,8 @@
     <div class="cell" style="max-width: 300px">Абитуриент</div>
     <div class="cell" style="max-width: 300px">Экзамен</div>
     <div class="cell" style="max-width: 300px">Результат</div>
-    <div style="width: 100%; max-width: 60px"></div>
-    <div style="width: 100%; max-width: 60px"></div>
+    <div style="width: 100%; max-width: 89px"></div>
+    <div style="width: 100%; max-width: 89px"></div>
 </div>
 <div class="data-container">
     @foreach (var examResult in _examResults)
@@ -28,17 +28,17 @@
             <div class="cell" style="max-width: 300px">@examResult.Result</div>
             <Button Color="Blazorise.Color.Primary"
                 class="edit-item"
-                Style="max-width: 60px"
+                Style="max-width: 89px"
                 TextAlignment="TextAlignment.Center"
                 @onclick="@(() => ShowUpdModal(examResult.Id))">
-                UPD
+                UPDATE
             </Button>
             <Button Color="Blazorise.Color.Danger"
                 class="delete-item"
                 @onclick="@(() => DeleteExamResult(examResult.Id))"
-                Style="max-width: 60px"
+                Style="max-width: 89px"
                 TextAlignment="TextAlignment.Center">
-                DEL
+                DELETE
             </Button>
         </div>
     }
@@ -58,16 +58,18 @@
                         <option>@applicant.Id</option>
                     }
                 </select>
-                <p>@GetApplicantName(newExamResult.ApplicantId)</p>
+                <p class="form-control" style="border: none">@GetApplicantName(newExamResult.ApplicantId) | @(GetApplicantBirthDay(newExamResult.ApplicantId)) | @(GetApplicantCity(newExamResult.ApplicantId))</p>
             </div>
 
             <div class="mb-3">
                 <label for="examName">Название экзамена:</label>
-                <input type="text" id="examName" @bind="newExamResult.ExamName" />
+                <input type="text" id="examName" @bind="newExamResult.ExamName" class="form-control"/>
             </div>
             <div class="mb-3">
                 <label for="result">Результат:</label>
-                <input type="number" min="0" max="100" id="result" @bind="newExamResult.Result" class="form-control" />
+                <div id="result" class="input-with-buttons">
+                    <input type="number" @bind="newExamResult.Result" class="form-control" />
+                </div>
             </div>
         </ModalBody>
         <ModalFooter>
@@ -159,4 +161,8 @@
     }
 
     private string GetApplicantName(int applicantId) => _applicants?.FirstOrDefault(a => a.Id == applicantId)?.FullName!;
+
+    private string GetApplicantBirthDay(int applicantId) => _applicants?.FirstOrDefault(a => a.Id == applicantId)?.BirthdayDate.ToShortDateString()!;
+
+    private string GetApplicantCity(int applicantId) => _applicants?.FirstOrDefault(a => a.Id == applicantId)?.City!;
 }

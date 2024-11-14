@@ -57,6 +57,8 @@ namespace AdmissionCommittee.Server.Controllers
             if (item == null) return BadRequest();
 
             var newItem = mapper.Map<Direction>(item);
+            if (newItem.Priority < 1) newItem.Priority = 1;
+            else if (newItem.Priority > 5) newItem.Priority = 5;
             await repository.Add(newItem);
 
             return Ok(newItem);

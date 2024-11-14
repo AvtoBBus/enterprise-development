@@ -205,7 +205,7 @@
 
     private string testCity = "";
     private int testYear = 0;
-    private DateTime testDateTime = DateTime.ParseExact("01.01.1990", "dd.MM.yyyy", CultureInfo.InvariantCulture);
+    private DateTime testDateTime = DateTime.ParseExact("01.01.2024", "dd.MM.yyyy", CultureInfo.InvariantCulture);
     private string testSpecialitiesName = "";
     private int testPriorityValue = 0;
 
@@ -222,6 +222,7 @@
         if (response != null)
         {
             _applicants = response;
+            testCity = _applicants.Select(a => a.City).First();
         }
     }
 
@@ -231,6 +232,7 @@
         if (response != null)
         {
             _specialities = response;
+            testSpecialitiesName = _specialities.Select(s => s.Name).First();
         }
     }
 
@@ -260,110 +262,51 @@
         await LoadSpecialities();
     }
 
-    private void ClickHandler(int taskId)
+    private async Task ClickHandler(int taskId)
     {
         switch (taskId)
         {
             case 1:
-                query1 = _applicants.Where(a => a.City == testCity)
-                            .ToList();
+                var response1 = await Http.GetFromJsonAsync<List<Applicant>>("api/Tasks/ApplicantsByCity?testCity=" + testCity);
+                if (response1 != null)
+                {
+                    query1 = response1;
+                }
                 break;
             case 2:
-                query2 = _applicants.Where(a => a.BirthdayDate.AddYears(testYear) < testDateTime)
-                            .OrderBy(a => a.FullName)
-                            .ToList();
+                var response2 = await Http.GetFromJsonAsync<List<Applicant>>("api/Tasks/OlderApplicants?testYear=" + testYear + "&testDateTime=" + testDateTime);
+                if (response2 != null)
+                {
+                    query2 = response2;
+                }
                 break;
             case 3:
-                query3 = (from specialities in _specialities
-                          where specialities.Name == testSpecialitiesName
-                          join directions in _directions on specialities.Id equals directions.SpecialityId
-                          join applicants in _applicants on directions.ApplicantId equals applicants.Id
-                          select new ApplicantTotalScoreDto
-                             {
-                                 Applicant = applicants,
-                                 TotalScore = _examResults
-                                         .Where(examResult => examResult.ApplicantId == applicants.Id)
-                                         .Sum(examResult => examResult.Result)
-                             })
-                                .OrderByDescending(x => x.TotalScore)
-                                .Distinct()
-                                .ToList();
-
+                var response3 = await Http.GetFromJsonAsync<List<ApplicantTotalScoreDto>>("api/Tasks/SelectBySpeciality?testSpecialitiesName=" + testSpecialitiesName);
+                if (response3 != null)
+                {
+                    query3 = response3;
+                }
                 break;
             case 4:
-                query4 = (from direction in _directions
-                          where direction.Priority == testPriorityValue
-                          group direction by direction.SpecialityId into g
-                          select new DirectionsGroupWithCountDto
-                            {
-                                Directions = g.ToList(),
-                                Count = g.Count()
-                            }).ToList();
+                var response4 = await Http.GetFromJsonAsync<List<DirectionsGroupWithCountDto>>("api/Tasks/FirstPrioritySpecialitiesByApplicantsAmount?testPriorityValue=" + testPriorityValue);
+                if (response4 != null)
+                {
+                    query4 = response4;
+                }
                 break;
             case 5:
-                query5 = _applicants
-                        .Select(applicant => new ApplicantWithScoreDto
-                        {
-                            Applicant = applicant,
-                            Score = _examResults
-                            .Where(examRes => examRes.ApplicantId == applicant.Id)
-                            .Sum(examRes => examRes.Result)
-                        }).OrderByDescending(a => a.Score)
-                        .Take(5)
-                        .ToList();
+                var response5 = await Http.GetFromJsonAsync<List<ApplicantWithScoreDto>>("api/Tasks/TopRatedApplicants");
+                if (response5 != null)
+                {
+                    query5 = response5;
+                }
                 break;
             case 6:
-                var maxScoreByExam = _examResults
-                   .GroupBy(examRes => examRes.ExamName)
-                   .Select(Group => new
-                   {
-                       ExamName = Group.Key,
-                       MaxScore = Group.Max(examRes => examRes.Result)
-                   });
-
-                query6 = maxScoreByExam
-                        .Join(
-                            _examResults,
-                            maxScore => maxScore.MaxScore,
-                            examRes => examRes.Result,
-                            (maxScore, examRes) => new
-                            {
-                                MaxScore = maxScore,
-                                ExamRes = examRes
-                            }
-                        )
-                        .Where(joined => joined.MaxScore.ExamName == joined.ExamRes.ExamName)
-                        .Join(
-                            _applicants,
-                            maxScore => maxScore.ExamRes.ApplicantId,
-                            applicant => applicant.Id,
-                            (maxScore, applicant) => new
-                            {
-                                MaxScore = maxScore,
-                                Applicant = applicant
-                            }
-                        )
-                        .Join(
-                            _directions,
-                            maxScore => maxScore.Applicant.Id,
-                            direction => direction.ApplicantId,
-                            (maxScore, direction) => new
-                            {
-                                maxScore.Applicant,
-                                direction.SpecialityId,
-                                maxScore.MaxScore.ExamRes.ExamName,
-                                MaxScore = maxScore.MaxScore.ExamRes.Result,
-                                direction.Priority
-                            }
-                        )
-                        .Where(speciality => speciality.Priority == 1)
-                        .Select(speciality => speciality)
-                        .ToList()
-                        .Select(q => new ApplicantWithSpecialityDto
-                        {
-                                ApplicantId = q.Applicant.Id,
-                                SpecialityId = q.SpecialityId
-                        }).ToList();
+                var response6 = await Http.GetFromJsonAsync<List<ApplicantWithSpecialityDto>>("api/Tasks/FavoriteSpecialitiesByopRatedApplicants");
+                if (response6 != null)
+                {
+                    query6 = response6;
+                }
                 break;
         }
     }

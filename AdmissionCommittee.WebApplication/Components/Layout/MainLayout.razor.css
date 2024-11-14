@@ -118,8 +118,26 @@ main {
     width: 100%;
     border: 1px solid #04173d;
     border-radius: 4px;
+    align-items: center;
 }
 
 ::deep .modal.show {
     display: block;
+}
+
+::deep .input-with-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+::deep .modal-button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background-color: darkgrey;
+    font-size: 18px;
+    max-height: 38px;
+    margin: 0 5px;
+    border-radius: .25rem;
 }

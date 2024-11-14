@@ -1,4 +1,8 @@
-﻿.task-container {
+﻿input {
+    padding: 5px;
+}
+
+.task-container {
     padding: 7px;
     background-color: #8b96a2;
     border-radius: 4px;
@@ -15,12 +19,13 @@
     margin-top: 10px;
     background-color: #778492;
     border-radius: 4px;
-    color: #414a53;
+    color: #dbe3eb;
     padding: 4px;
 }
 
 .result-cell {
     display: flex;
+    margin: 7px;
 }
 
 .result-bigcell {

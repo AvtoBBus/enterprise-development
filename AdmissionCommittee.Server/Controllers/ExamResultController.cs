@@ -57,6 +57,10 @@ namespace AdmissionCommittee.Server.Controllers
             if (item == null) return BadRequest();
 
             var newItem = mapper.Map<ExamResult>(item);
+
+            if (newItem.Result < 0) newItem.Result = 0;
+            else if (newItem.Result > 100) newItem.Result = 100;
+
             await repository.Add(newItem);
 
             return Ok(newItem);
