@@ -1,9 +1,6 @@
 ﻿@page "/tasks"
-@inject IRepository<Applicant, int> applicantRepository;
-@inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
-@inject IRepository<ExamResult, int> examResultsRepository;
-@inject IRepository<Speciality, int> specialitiesRepository;
 @using System.Globalization;
+@inject HttpClient Http
 
 <PageTitle>Tasks</PageTitle>
 
@@ -219,13 +216,48 @@
     private List<ApplicantWithScoreDto> query5 = null!;
     private List<ApplicantWithSpecialityDto> query6 = null!;
 
+    private async Task LoadApplicants()
+    {
+        var response = await Http.GetFromJsonAsync<List<Applicant>>("api/Applicant");
+        if (response != null)
+        {
+            _applicants = response;
+        }
+    }
+
+    private async Task LoadSpecialities()
+    {
+        var response = await Http.GetFromJsonAsync<List<Speciality>>("api/Speciality");
+        if (response != null)
+        {
+            _specialities = response;
+        }
+    }
+
+    private async Task LoadDirections()
+    {
+        var response = await Http.GetFromJsonAsync<List<AdmissionCommittee.Domain.Models.Direction>>("api/Direction");
+        if (response != null)
+        {
+            _directions = response;
+        }
+    }
+
+    private async Task LoadExamResults()
+    {
+        var response = await Http.GetFromJsonAsync<List<ExamResult>>("api/ExamResult");
+        if (response != null)
+        {
+            _examResults = response;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        _applicants = await applicantRepository.GetAll();
-        _directions = await directionRepository.GetAll();
-        _examResults = await examResultsRepository.GetAll();
-        _specialities = await specialitiesRepository.GetAll();
+        await LoadApplicants();
+        await LoadDirections();
+        await LoadExamResults();
+        await LoadSpecialities();
     }
 
     private void ClickHandler(int taskId)

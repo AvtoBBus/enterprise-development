@@ -1,7 +1,5 @@
 ﻿@page "/directions"
-@inject IRepository<AdmissionCommittee.Domain.Models.Direction, int> directionRepository;
-@inject IRepository<Applicant, int> applicantRepository;
-@inject IRepository<Speciality, int> specialitiesRepository;
+@inject HttpClient Http
 
 <PageTitle>Directions</PageTitle>
 
@@ -98,38 +96,71 @@
     private AdmissionCommittee.Domain.Models.Direction newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0};
     private bool forAdd = true;
 
+    private string directionUrl = "api/Direction";
+
+    private async Task UpdateMainList()
+    {
+        var response = await Http.GetFromJsonAsync<List<Domain.Models.Direction>>(directionUrl);
+        if (response != null)
+        {
+            _directions = response;
+        }
+    }
+
+    private async Task LoadApplicants()
+    {
+        var response = await Http.GetFromJsonAsync<List<Applicant>>("api/Applicant");
+        if (response != null)
+        {
+            _applicants = response;
+        }
+    }
+
+    private async Task LoadSpecialities()
+    {
+        var response = await Http.GetFromJsonAsync<List<Speciality>>("api/Speciality");
+        if (response != null)
+        {
+            _specialyties = response;
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        _applicants = await applicantRepository.GetAll();
-        _directions = await directionRepository.GetAll();
-        _specialyties = await specialitiesRepository.GetAll();
+        await UpdateMainList();
+        await LoadApplicants();
+        await LoadSpecialities();
     }
 
     private async Task AddNewDirection()
     {
-        await directionRepository.Add(newDirection);
-        _directions = await directionRepository.GetAll();
+        await Http.PostAsJsonAsync<Domain.Models.Direction>(directionUrl, newDirection);
+        await UpdateMainList();
         await modalRef!.Hide();
     }
 
     private async Task DeleteDirection(int directionId)
     {
-        await directionRepository.Delete(directionId);
-        _directions = await directionRepository.GetAll();
+        await Http.DeleteAsync($"{directionUrl}/{directionId}");
+        await UpdateMainList();
     }
 
     private async Task UpdateDirection()
     {
-        await directionRepository.Update(newDirection, newDirection.Id);
+        await Http.PutAsJsonAsync<Domain.Models.Direction>($"{directionUrl}/{newDirection.Id}", newDirection);
+        await UpdateMainList();
         newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0 };
-        _directions = await directionRepository.GetAll();
         await modalRef!.Hide();
     }
 
     private async Task ShowUpdModal(int directionId)
     {
         forAdd = false;
-        newDirection = await directionRepository.GetById(directionId);
+        var response = await Http.GetFromJsonAsync<Domain.Models.Direction>($"{directionUrl}/{directionId}");
+        if (response != null)
+        {
+            newDirection = response;
+        }
         await modalRef!.Show();
     }
 
@@ -137,6 +168,8 @@
     {
         forAdd = true;
         newDirection = new() { Id = 0, ApplicantId = 0, SpecialityId = 0, Priority = 0 };
+        newDirection.ApplicantId = _applicants.Select(a => a.Id).First();
+        newDirection.SpecialityId = _specialyties.Select(s => s.Id).First();
         await modalRef!.Show();
     }
 

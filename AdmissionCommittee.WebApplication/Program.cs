@@ -1,9 +1,6 @@
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
-using AdmissionCommittee.Domain.Interfaces;
-using AdmissionCommittee.Domain.Models;
-using AdmissionCommittee.Domain.Repositories;
 using AdmissionCommittee.WebApplication.Components;
 using AdmissionCommittee.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +17,13 @@ var connectionString = builder.Configuration.GetConnectionString("MySql");
 builder.Services.AddDbContext<AdmissionCommitteeDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddTransient<IRepository<Applicant, int>, ApplicantRepository>();
-builder.Services.AddTransient<IRepository<AdmissionCommittee.Domain.Models.Direction, int>, DirectionRepository>();
-builder.Services.AddTransient<IRepository<ExamResult, int>, ExamResultRepository>();
-builder.Services.AddTransient<IRepository<Speciality, int>, SpecialityRepository>();
+builder.Services.AddScoped(sp =>
+    new HttpClient
+    {
+        BaseAddress = new Uri(builder.Configuration["BasePath"]!)
+    });
+
+builder.Services.AddHttpClient();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMudServices();

@@ -1,6 +1,5 @@
 ﻿@page "/examResults"
-@inject IRepository<Applicant, int> applicantRepository;
-@inject IRepository<ExamResult, int> examResultsRepository;
+@inject HttpClient Http
 
 <PageTitle>Exam Results</PageTitle>
 
@@ -88,38 +87,61 @@
     private Modal? modalRef = null!;
     private ExamResult newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
     private bool forAdd = true;
+    private string examResultUrl = "api/ExamResult";
+
+    private async Task UpdateMainList()
+    {
+        var response = await Http.GetFromJsonAsync<List<ExamResult>>(examResultUrl);
+        if (response != null)
+        {
+            _examResults = response;
+        }
+    }
+
+    private async Task LoadApplicants()
+    {
+        var applicantResponse = await Http.GetFromJsonAsync<List<Applicant>>("api/Applicant");
+        if (applicantResponse != null)
+        {
+            _applicants = applicantResponse;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        _applicants = await applicantRepository.GetAll();
-        _examResults = await examResultsRepository.GetAll();
+        await UpdateMainList();
+        await LoadApplicants();
     }
 
     private async Task AddNewExamResult()
     {
-        await examResultsRepository.Add(newExamResult);
-        _examResults = await examResultsRepository.GetAll();
+        await Http.PostAsJsonAsync<ExamResult>(examResultUrl, newExamResult);
+        await UpdateMainList();
         await modalRef!.Hide();
     }
 
     private async Task DeleteExamResult(int examResultId)
     {
-        await examResultsRepository.Delete(examResultId);
-        _examResults = await examResultsRepository.GetAll();
+        await Http.DeleteAsync($"{examResultUrl}/{examResultId}");
+        await UpdateMainList();
     }
 
     private async Task UpdateExamResult()
     {
-        await examResultsRepository.Update(newExamResult, newExamResult.Id);
+        await Http.PutAsJsonAsync<ExamResult>($"{examResultUrl}/{newExamResult.Id}", newExamResult);
+        await UpdateMainList();
         newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
-        _examResults = await examResultsRepository.GetAll();
         await modalRef!.Hide();
     }
 
     private async Task ShowUpdModal(int examResultId)
     {
         forAdd = false;
-        newExamResult = await examResultsRepository.GetById(examResultId);
+        var response = await Http.GetFromJsonAsync<ExamResult>($"{examResultUrl}/{examResultId}");
+        if (response != null)
+        {
+            newExamResult = response;
+        }
         await modalRef!.Show();
     }
 
@@ -127,6 +149,7 @@
     {
         forAdd = true;
         newExamResult = new() { Id = 0, ApplicantId = 0, ExamName = "", Result = 0 };
+        newExamResult.ApplicantId = _applicants.Select(a => a.Id).First();
         await modalRef!.Show();
     }
 

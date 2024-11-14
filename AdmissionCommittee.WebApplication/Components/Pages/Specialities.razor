@@ -1,5 +1,5 @@
 ﻿@page "/specialities"
-@inject IRepository<Speciality, int> specialitiesRepository;
+@inject HttpClient Http
 
 <PageTitle>Specialities</PageTitle>
 
@@ -79,37 +79,51 @@
     private Modal? modalRef = null!;
     private Speciality newSpeciality = new() { Id = 0, Name = "", Number = "", Faculity = "" };
     private bool forAdd = true;
+    private string specialityUrl = "api/Speciality";
+
+    private async Task UpdateMainList()
+    {
+        var response = await Http.GetFromJsonAsync<List<Speciality>>(specialityUrl);
+        if (response != null)
+        {
+            _specialities = response;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        _specialities = await specialitiesRepository.GetAll();
+        await UpdateMainList();
     }
 
     private async Task AddNewSpeciality()
     {
-        await specialitiesRepository.Add(newSpeciality);
-        _specialities = await specialitiesRepository.GetAll();
+        await Http.PostAsJsonAsync<Speciality>(specialityUrl, newSpeciality);
+        await UpdateMainList();
         await modalRef!.Hide();
     }
 
-    private async Task DeleteSpeciality(int examResultId)
+    private async Task DeleteSpeciality(int specialityId)
     {
-        await specialitiesRepository.Delete(examResultId);
-        _specialities = await specialitiesRepository.GetAll();
+        await Http.DeleteAsync($"{specialityUrl}/{specialityId}");
+        await UpdateMainList();
     }
 
     private async Task UpdateSpeciality()
     {
-        await specialitiesRepository.Update(newSpeciality, newSpeciality.Id);
+        await Http.PutAsJsonAsync<Speciality>($"{specialityUrl}/{newSpeciality.Id}", newSpeciality);
+        await UpdateMainList();
         newSpeciality = new() { Id = 0, Name = "", Number = "", Faculity = "" };
-        _specialities = await specialitiesRepository.GetAll();
         await modalRef!.Hide();
     }
 
-    private async Task ShowUpdModal(int examResultId)
+    private async Task ShowUpdModal(int specialityId)
     {
         forAdd = false;
-        newSpeciality = await specialitiesRepository.GetById(examResultId);
+        var response = await Http.GetFromJsonAsync<Speciality>($"{specialityUrl}/{specialityId}");
+        if (response != null)
+        {
+            newSpeciality = response;
+        }
         await modalRef!.Show();
     }
 
