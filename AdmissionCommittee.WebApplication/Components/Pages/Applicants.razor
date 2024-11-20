@@ -118,7 +118,7 @@
         var directions = await Http.GetFromJsonAsync<List<Domain.Models.Direction>>("api/Direction");
         if (directions != null)
         {
-            directions = directions.Select(d => d).Where(d => d.ApplicantId == applicantId).ToList();
+            directions = directions.Where(d => d.ApplicantId == applicantId).ToList();
             foreach (var d in directions)
             {
                 await Http.DeleteAsync($"api/Direction/{d.Id}");
@@ -128,7 +128,7 @@
         var examResults = await Http.GetFromJsonAsync<List<ExamResult>>("api/ExamResult");
         if (examResults != null)
         {
-            examResults = examResults.Select(e => e).Where(e => e.ApplicantId == applicantId).ToList();
+            examResults = examResults.Where(e => e.ApplicantId == applicantId).ToList();
             foreach (var e in examResults)
             {
                 await Http.DeleteAsync($"api/ExamResult/{e.Id}");

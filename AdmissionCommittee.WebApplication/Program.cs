@@ -2,8 +2,6 @@ using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using AdmissionCommittee.WebApplication.Components;
-using AdmissionCommittee.Domain;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
